@@ -1,0 +1,18 @@
+{
+  "name": "bank-sampah",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Mahardika",
+  "private": true,
+  "workspaces": [
+    "app/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:app": "npm run build -w app/backend && npm run build -w app/frontend",
+    "start:dev": "concurrently -n FrontEnd,BackEnd -c blue,red \"npm run dev -w app/frontend\" \"npm run start:dev -w app/backend\""
+  },
+  "dependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

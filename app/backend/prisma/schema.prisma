@@ -1,0 +1,273 @@
+generator client {
+  provider      = "prisma-client"
+  output        = "../generated/prisma"
+  compilerBuild = "fast"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  admin_bank
+  nasabah
+}
+
+enum JenisSampah {
+  plastik
+  kertas
+  logam
+  kaca
+}
+
+enum StatusSetor {
+  belum_dikonfirmasi
+  diproses
+  selesai
+  ditolak
+}
+
+enum StatusPenukaran {
+  diproses
+  selesai
+}
+
+model User {
+  id       String   @id @default(uuid()) @db.Uuid
+  tenantId String   @map("tenant_id") @db.Uuid
+  username String   @db.VarChar(50)
+  password String   @db.VarChar(255)
+  role     UserRole
+
+  tenant    Tenant     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  adminBank AdminBank?
+  nasabah   Nasabah?
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  deletedBy  String?   @map("deleted_by") @db.Uuid
+  restoredAt DateTime? @map("restored_at")
+  restoredBy String?   @map("restored_by") @db.Uuid
+
+  @@unique([tenantId, username])
+  @@unique([id, tenantId])
+  @@index([tenantId, deletedAt])
+  @@map("users")
+}
+
+model AdminBank {
+  id            String @id @default(uuid()) @db.Uuid
+  tenantId      String @map("tenant_id") @db.Uuid
+  namaUnit      String @map("nama_unit") @db.VarChar(100)
+  namaPengelola String @map("nama_pengelola") @db.VarChar(100)
+  telp          String @db.VarChar(20)
+  idUser        String @unique @map("id_user") @db.Uuid
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  user   User   @relation(fields: [idUser, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  setoran SetorSampah[]
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  deletedBy  String?   @map("deleted_by") @db.Uuid
+  restoredAt DateTime? @map("restored_at")
+  restoredBy String?   @map("restored_by") @db.Uuid
+
+  @@unique([idUser, tenantId])
+  @@unique([id, tenantId])
+  @@index([tenantId, deletedAt])
+  @@map("admin_bank")
+}
+
+model Nasabah {
+  id          String  @id @default(uuid()) @db.Uuid
+  tenantId    String  @map("tenant_id") @db.Uuid
+  namaNasabah String  @map("nama_nasabah") @db.VarChar(100)
+  alamat      String?
+  telp        String  @db.VarChar(20)
+  saldoPoin   Decimal @default(0) @map("saldo_poin") @db.Decimal(14, 2)
+  idUser      String  @unique @map("id_user") @db.Uuid
+  foto        String? @db.VarChar(255)
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  user   User   @relation(fields: [idUser, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  setoran   SetorSampah[]
+  penukaran PenukaranPoin[]
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  deletedBy  String?   @map("deleted_by") @db.Uuid
+  restoredAt DateTime? @map("restored_at")
+  restoredBy String?   @map("restored_by") @db.Uuid
+
+  @@unique([id, tenantId])
+  @@unique([idUser, tenantId])
+  @@index([tenantId, deletedAt])
+  @@map("nasabah")
+}
+
+model KategoriSampah {
+  id           String      @id @default(uuid()) @db.Uuid
+  tenantId     String      @map("tenant_id") @db.Uuid
+  namaKategori String      @map("nama_kategori") @db.VarChar(100)
+  hargaPerKg   Decimal     @map("harga_per_kg") @db.Decimal(14, 2)
+  poinPerKg    Decimal     @map("poin_per_kg") @db.Decimal(14, 2)
+  jenis        JenisSampah
+  foto         String?     @db.VarChar(255)
+
+  tenant      Tenant        @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  detailSetor DetailSetor[]
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  deletedBy  String?   @map("deleted_by") @db.Uuid
+  restoredAt DateTime? @map("restored_at")
+  restoredBy String?   @map("restored_by") @db.Uuid
+
+  @@unique([tenantId, namaKategori])
+  @@unique([id, tenantId])
+  @@index([tenantId, deletedAt])
+  @@map("kategori_sampah")
+}
+
+model SetorSampah {
+  id        String      @id @default(uuid()) @db.Uuid
+  tenantId  String      @map("tenant_id") @db.Uuid
+  tanggal   DateTime    @default(now())
+  idAdmin   String?     @map("id_admin") @db.Uuid
+  idNasabah String      @map("id_nasabah") @db.Uuid
+  status    StatusSetor @default(belum_dikonfirmasi)
+
+  totalHarga Decimal @default(0) @map("total_harga") @db.Decimal(14, 2)
+  totalPoin  Decimal @default(0) @map("total_poin") @db.Decimal(14, 2)
+
+  tenant  Tenant     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  admin   AdminBank? @relation(fields: [idAdmin, tenantId], references: [id, tenantId], onDelete: Restrict)
+  nasabah Nasabah    @relation(fields: [idNasabah, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  detail    DetailSetor[]
+  penukaran PenukaranPoin[]
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  deletedBy  String?   @map("deleted_by") @db.Uuid
+  restoredAt DateTime? @map("restored_at")
+  restoredBy String?   @map("restored_by") @db.Uuid
+
+  @@unique([id, tenantId])
+  @@index([tenantId, status])
+  @@index([tenantId, idNasabah])
+  @@index([tenantId, deletedAt])
+  @@map("setor_sampah")
+}
+
+model DetailSetor {
+  id                   String   @id @default(uuid()) @db.Uuid
+  tenantId             String   @map("tenant_id") @db.Uuid
+  idSetor              String   @map("id_setor") @db.Uuid
+  idKategori           String   @map("id_kategori_sampah") @db.Uuid
+  beratKg              Decimal  @map("berat_kg") @db.Decimal(14, 3)
+  beratEstimasiKg      Decimal? @map("berat_estimasi_kg") @db.Decimal(14, 3)
+  beratTerverifikasiKg Decimal? @map("berat_terverifikasi_kg") @db.Decimal(14, 3)
+  subtotalPoin         Decimal  @default(0) @map("subtotal_poin") @db.Decimal(14, 2)
+  subtotalHarga        Decimal  @default(0) @map("subtotal_harga") @db.Decimal(14, 2)
+
+  tenant   Tenant         @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  setor    SetorSampah    @relation(fields: [idSetor, tenantId], references: [id, tenantId], onDelete: Restrict)
+  kategori KategoriSampah @relation(fields: [idKategori, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  deletedBy  String?   @map("deleted_by") @db.Uuid
+  restoredAt DateTime? @map("restored_at")
+  restoredBy String?   @map("restored_by") @db.Uuid
+
+  @@index([tenantId, idSetor])
+  @@index([tenantId, deletedAt])
+  @@map("detail_setor")
+}
+
+model Hadiah {
+  id             String  @id @default(uuid()) @db.Uuid
+  tenantId       String  @map("tenant_id") @db.Uuid
+  namaHadiah     String  @map("nama_hadiah") @db.VarChar(100)
+  poinDibutuhkan Decimal @map("poin_dibutuhkan") @db.Decimal(14, 2)
+  stok           Int
+  foto           String? @db.VarChar(255)
+
+  tenant    Tenant          @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  penukaran PenukaranPoin[]
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  deletedBy  String?   @map("deleted_by") @db.Uuid
+  restoredAt DateTime? @map("restored_at")
+  restoredBy String?   @map("restored_by") @db.Uuid
+
+  @@unique([tenantId, namaHadiah])
+  @@unique([id, tenantId])
+  @@index([tenantId, deletedAt])
+  @@map("hadiah")
+}
+
+model PenukaranPoin {
+  id           String          @id @default(uuid()) @db.Uuid
+  tenantId     String          @map("tenant_id") @db.Uuid
+  tanggal      DateTime        @default(now())
+  idSetor      String?         @map("id_setor") @db.Uuid
+  idNasabah    String          @map("id_nasabah") @db.Uuid
+  idHadiah     String          @map("id_hadiah") @db.Uuid
+  poinTerpakai Decimal         @map("poin_terpakai") @db.Decimal(14, 2)
+  status       StatusPenukaran @default(diproses)
+
+  tenant  Tenant       @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  setor   SetorSampah? @relation(fields: [idSetor, tenantId], references: [id, tenantId], onDelete: Restrict)
+  nasabah Nasabah      @relation(fields: [idNasabah, tenantId], references: [id, tenantId], onDelete: Restrict)
+  hadiah  Hadiah       @relation(fields: [idHadiah, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  deletedBy  String?   @map("deleted_by") @db.Uuid
+  restoredAt DateTime? @map("restored_at")
+  restoredBy String?   @map("restored_by") @db.Uuid
+
+  @@index([tenantId, idNasabah])
+  @@index([tenantId, status])
+  @@index([tenantId, deletedAt])
+  @@map("penukaran_poin")
+}
+
+model Tenant {
+  id       String  @id @default(uuid()) @db.Uuid
+  appKey   String  @unique @map("app_key")
+  name     String
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  deletedBy  String?   @map("deleted_by") @db.Uuid
+  restoredAt DateTime? @map("restored_at")
+  restoredBy String?   @map("restored_by") @db.Uuid
+
+  users           User[]
+  adminBanks      AdminBank[]
+  nasabahs        Nasabah[]
+  kategoriSampahs KategoriSampah[]
+  setorSampahs    SetorSampah[]
+  detailSetors    DetailSetor[]
+  hadiahs         Hadiah[]
+  penukaranPoins  PenukaranPoin[]
+
+  @@map("tenants")
+}
