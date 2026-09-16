@@ -1,40 +1,39 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ExecutionContext } from '@nestjs/common';
-import { ThrottlerStorage } from '@nestjs/throttler';
+import type { ThrottlerModuleOptions, ThrottlerStorage } from '@nestjs/throttler';
+import type { Reflector } from '@nestjs/core';
 import { LoginThrottlerGuard } from './login-throttler.guard.js';
 
+class TestableThrottlerGuard extends LoginThrottlerGuard {
+  public track(req: Record<string, unknown>): Promise<string> {
+    return this.getTracker(req);
+  }
+}
+
 describe('LoginThrottlerGuard', () => {
-  let guard: LoginThrottlerGuard;
-  let mockStorage: Partial<ThrottlerStorage>;
-  let mockReflector: any;
-  let mockThrottlerOptions: any;
+  let guard: TestableThrottlerGuard;
 
   beforeEach(() => {
-    mockStorage = {
+    const mockStorage = {
       increment: vi.fn().mockResolvedValue({
         totalHits: 1,
         timeToExpire: 60,
         isBlocked: false,
         timeToBlockExpire: 0,
       }),
-    };
+    } as unknown as ThrottlerStorage;
 
-    mockReflector = {
+    const mockReflector = {
       get: vi.fn(),
       getAllAndOverride: vi.fn(),
-      getAllAndCompute: vi.fn(),
-    };
+    } as unknown as Reflector;
 
-    mockThrottlerOptions = [
-      {
-        ttl: 60,
-        limit: 5,
-      },
-    ];
+    const mockThrottlerOptions = {
+      throttlers: [{ ttl: 60, limit: 5 }],
+    } as unknown as ThrottlerModuleOptions;
 
-    guard = new LoginThrottlerGuard(
+    guard = new TestableThrottlerGuard(
       mockThrottlerOptions,
-      mockStorage as ThrottlerStorage,
+      mockStorage,
       mockReflector,
     );
   });
@@ -44,8 +43,7 @@ describe('LoginThrottlerGuard', () => {
   });
 
   it('should extract correct IP tracker from request', async () => {
-    const mockReq = { ip: '127.0.0.1' };
-    const tracker = await (guard as any).getTracker(mockReq);
+    const tracker = await guard.track({ ip: '127.0.0.1' });
 
     expect(tracker).toBe('127.0.0.1');
   });

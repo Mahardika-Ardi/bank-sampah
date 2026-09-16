@@ -43,6 +43,7 @@ export type NasabahMinAggregateOutputType = {
   saldoPoin: runtime.Decimal | null
   idUser: string | null
   foto: string | null
+  tanggalLahir: Date | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -60,6 +61,7 @@ export type NasabahMaxAggregateOutputType = {
   saldoPoin: runtime.Decimal | null
   idUser: string | null
   foto: string | null
+  tanggalLahir: Date | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -77,6 +79,7 @@ export type NasabahCountAggregateOutputType = {
   saldoPoin: number
   idUser: number
   foto: number
+  tanggalLahir: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -104,6 +107,7 @@ export type NasabahMinAggregateInputType = {
   saldoPoin?: true
   idUser?: true
   foto?: true
+  tanggalLahir?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -121,6 +125,7 @@ export type NasabahMaxAggregateInputType = {
   saldoPoin?: true
   idUser?: true
   foto?: true
+  tanggalLahir?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -138,6 +143,7 @@ export type NasabahCountAggregateInputType = {
   saldoPoin?: true
   idUser?: true
   foto?: true
+  tanggalLahir?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -242,6 +248,7 @@ export type NasabahGroupByOutputType = {
   saldoPoin: runtime.Decimal
   idUser: string
   foto: string | null
+  tanggalLahir: Date | null
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -282,6 +289,7 @@ export type NasabahWhereInput = {
   saldoPoin?: Prisma.DecimalFilter<"Nasabah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser?: Prisma.UuidFilter<"Nasabah"> | string
   foto?: Prisma.StringNullableFilter<"Nasabah"> | string | null
+  tanggalLahir?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
@@ -303,6 +311,7 @@ export type NasabahOrderByWithRelationInput = {
   saldoPoin?: Prisma.SortOrder
   idUser?: Prisma.SortOrder
   foto?: Prisma.SortOrderInput | Prisma.SortOrder
+  tanggalLahir?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -329,6 +338,7 @@ export type NasabahWhereUniqueInput = Prisma.AtLeast<{
   telp?: Prisma.StringFilter<"Nasabah"> | string
   saldoPoin?: Prisma.DecimalFilter<"Nasabah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.StringNullableFilter<"Nasabah"> | string | null
+  tanggalLahir?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
@@ -350,6 +360,7 @@ export type NasabahOrderByWithAggregationInput = {
   saldoPoin?: Prisma.SortOrder
   idUser?: Prisma.SortOrder
   foto?: Prisma.SortOrderInput | Prisma.SortOrder
+  tanggalLahir?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -375,6 +386,7 @@ export type NasabahScalarWhereWithAggregatesInput = {
   saldoPoin?: Prisma.DecimalWithAggregatesFilter<"Nasabah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser?: Prisma.UuidWithAggregatesFilter<"Nasabah"> | string
   foto?: Prisma.StringNullableWithAggregatesFilter<"Nasabah"> | string | null
+  tanggalLahir?: Prisma.DateTimeNullableWithAggregatesFilter<"Nasabah"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Nasabah"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Nasabah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Nasabah"> | Date | string | null
@@ -390,6 +402,7 @@ export type NasabahCreateInput = {
   telp: string
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -411,6 +424,7 @@ export type NasabahUncheckedCreateInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser: string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -428,6 +442,7 @@ export type NasabahUpdateInput = {
   telp?: Prisma.StringFieldUpdateOperationsInput | string
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -449,6 +464,7 @@ export type NasabahUncheckedUpdateInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -468,6 +484,7 @@ export type NasabahCreateManyInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser: string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -483,6 +500,7 @@ export type NasabahUpdateManyMutationInput = {
   telp?: Prisma.StringFieldUpdateOperationsInput | string
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -500,6 +518,7 @@ export type NasabahUncheckedUpdateManyInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -532,6 +551,7 @@ export type NasabahCountOrderByAggregateInput = {
   saldoPoin?: Prisma.SortOrder
   idUser?: Prisma.SortOrder
   foto?: Prisma.SortOrder
+  tanggalLahir?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -553,6 +573,7 @@ export type NasabahMaxOrderByAggregateInput = {
   saldoPoin?: Prisma.SortOrder
   idUser?: Prisma.SortOrder
   foto?: Prisma.SortOrder
+  tanggalLahir?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -570,6 +591,7 @@ export type NasabahMinOrderByAggregateInput = {
   saldoPoin?: Prisma.SortOrder
   idUser?: Prisma.SortOrder
   foto?: Prisma.SortOrder
+  tanggalLahir?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -714,6 +736,7 @@ export type NasabahCreateWithoutUserInput = {
   telp: string
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -732,6 +755,7 @@ export type NasabahUncheckedCreateWithoutUserInput = {
   telp: string
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -765,6 +789,7 @@ export type NasabahUpdateWithoutUserInput = {
   telp?: Prisma.StringFieldUpdateOperationsInput | string
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -783,6 +808,7 @@ export type NasabahUncheckedUpdateWithoutUserInput = {
   telp?: Prisma.StringFieldUpdateOperationsInput | string
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -800,6 +826,7 @@ export type NasabahCreateWithoutSetoranInput = {
   telp: string
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -820,6 +847,7 @@ export type NasabahUncheckedCreateWithoutSetoranInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser: string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -852,6 +880,7 @@ export type NasabahUpdateWithoutSetoranInput = {
   telp?: Prisma.StringFieldUpdateOperationsInput | string
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -872,6 +901,7 @@ export type NasabahUncheckedUpdateWithoutSetoranInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -888,6 +918,7 @@ export type NasabahCreateWithoutPenukaranInput = {
   telp: string
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -908,6 +939,7 @@ export type NasabahUncheckedCreateWithoutPenukaranInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser: string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -940,6 +972,7 @@ export type NasabahUpdateWithoutPenukaranInput = {
   telp?: Prisma.StringFieldUpdateOperationsInput | string
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -960,6 +993,7 @@ export type NasabahUncheckedUpdateWithoutPenukaranInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -976,6 +1010,7 @@ export type NasabahCreateWithoutTenantInput = {
   telp: string
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -995,6 +1030,7 @@ export type NasabahUncheckedCreateWithoutTenantInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser: string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1043,6 +1079,7 @@ export type NasabahScalarWhereInput = {
   saldoPoin?: Prisma.DecimalFilter<"Nasabah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser?: Prisma.UuidFilter<"Nasabah"> | string
   foto?: Prisma.StringNullableFilter<"Nasabah"> | string | null
+  tanggalLahir?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
@@ -1059,6 +1096,7 @@ export type NasabahCreateManyTenantInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser: string
   foto?: string | null
+  tanggalLahir?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1074,6 +1112,7 @@ export type NasabahUpdateWithoutTenantInput = {
   telp?: Prisma.StringFieldUpdateOperationsInput | string
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1093,6 +1132,7 @@ export type NasabahUncheckedUpdateWithoutTenantInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1111,6 +1151,7 @@ export type NasabahUncheckedUpdateManyWithoutTenantInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1168,6 +1209,7 @@ export type NasabahSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   saldoPoin?: boolean
   idUser?: boolean
   foto?: boolean
+  tanggalLahir?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1190,6 +1232,7 @@ export type NasabahSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   saldoPoin?: boolean
   idUser?: boolean
   foto?: boolean
+  tanggalLahir?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1209,6 +1252,7 @@ export type NasabahSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   saldoPoin?: boolean
   idUser?: boolean
   foto?: boolean
+  tanggalLahir?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1228,6 +1272,7 @@ export type NasabahSelectScalar = {
   saldoPoin?: boolean
   idUser?: boolean
   foto?: boolean
+  tanggalLahir?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1236,7 +1281,7 @@ export type NasabahSelectScalar = {
   restoredBy?: boolean
 }
 
-export type NasabahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "namaNasabah" | "alamat" | "telp" | "saldoPoin" | "idUser" | "foto" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["nasabah"]>
+export type NasabahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "namaNasabah" | "alamat" | "telp" | "saldoPoin" | "idUser" | "foto" | "tanggalLahir" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["nasabah"]>
 export type NasabahInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1270,6 +1315,7 @@ export type $NasabahPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     saldoPoin: runtime.Decimal
     idUser: string
     foto: string | null
+    tanggalLahir: Date | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1711,6 +1757,7 @@ export interface NasabahFieldRefs {
   readonly saldoPoin: Prisma.FieldRef<"Nasabah", 'Decimal'>
   readonly idUser: Prisma.FieldRef<"Nasabah", 'String'>
   readonly foto: Prisma.FieldRef<"Nasabah", 'String'>
+  readonly tanggalLahir: Prisma.FieldRef<"Nasabah", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Nasabah", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Nasabah", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Nasabah", 'DateTime'>

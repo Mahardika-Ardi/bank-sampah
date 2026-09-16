@@ -1,21 +1,39 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SeedController } from './seed.controller.js';
 import { SeedService } from './seed.service.js';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
+import type { Request } from 'express';
+import { Tenant } from '../../../generated/prisma/client.js';
 
 describe('SeedController', () => {
   let controller: SeedController;
-  let mockSeedService: any;
+  let mockSeedService: { runSeed: Mock };
+
+  const mockTenant: Tenant = {
+    id: 'tenant-id',
+    name: 'Bank Sampah Asri Jaya',
+    appKey: 'mock-app-key',
+    email: 'siswa1@smk.sch.id',
+    namaSiswa: 'Budi Santoso',
+    kelas: 'XII RPL 1',
+    appName: 'Bank Sampah Asri Jaya',
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: null,
+    deletedBy: null,
+    restoredAt: null,
+    restoredBy: null,
+  };
 
   beforeEach(async () => {
     mockSeedService = {
       runSeed: vi.fn().mockResolvedValue({
-        tenant: {
-          id: 'tenant-id',
-          name: 'Bank Sampah Utama',
-          appKey: 'default-tenant-key',
-        },
-        user: { id: 'user-id', username: 'admin', role: 'admin_bank' },
+        admin: { username: 'admin_banksampah', password: 'admin123', namaUnit: 'Bank Sampah Asri Jaya' },
+        nasabah1: { username: 'nasabah_budi', password: 'password123', namaNasabah: 'Budi Santoso', saldoPoin: 150 },
+        nasabah2: { username: 'nasabah_siti', password: 'password123', namaNasabah: 'Siti Aminah', saldoPoin: 80 },
+        kategoriSampahCount: 4,
+        hadiahKatalogCount: 3,
       }),
     };
 
@@ -32,19 +50,19 @@ describe('SeedController', () => {
   });
 
   it('should trigger database seeding and return success response', async () => {
-    const result = await controller.seedDatabase();
+    const mockReq = { tenant: mockTenant } as Pick<Request, 'tenant'>;
+    const result = await controller.seedDatabase(mockReq as Request);
 
     expect(result).toEqual({
-      message: 'Seed executed successfully',
+      message: 'Dummy sample data Bank Sampah berhasil dibuat!',
       data: {
-        tenant: {
-          id: 'tenant-id',
-          name: 'Bank Sampah Utama',
-          appKey: 'default-tenant-key',
-        },
-        user: { id: 'user-id', username: 'admin', role: 'admin_bank' },
+        admin: { username: 'admin_banksampah', password: 'admin123', namaUnit: 'Bank Sampah Asri Jaya' },
+        nasabah1: { username: 'nasabah_budi', password: 'password123', namaNasabah: 'Budi Santoso', saldoPoin: 150 },
+        nasabah2: { username: 'nasabah_siti', password: 'password123', namaNasabah: 'Siti Aminah', saldoPoin: 80 },
+        kategoriSampahCount: 4,
+        hadiahKatalogCount: 3,
       },
     });
-    expect(mockSeedService.runSeed).toHaveBeenCalledOnce();
+    expect(mockSeedService.runSeed).toHaveBeenCalledWith(mockTenant);
   });
 });

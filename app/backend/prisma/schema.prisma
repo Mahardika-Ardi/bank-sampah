@@ -83,14 +83,15 @@ model AdminBank {
 }
 
 model Nasabah {
-  id          String  @id @default(uuid()) @db.Uuid
-  tenantId    String  @map("tenant_id") @db.Uuid
-  namaNasabah String  @map("nama_nasabah") @db.VarChar(100)
-  alamat      String?
-  telp        String  @db.VarChar(20)
-  saldoPoin   Decimal @default(0) @map("saldo_poin") @db.Decimal(14, 2)
-  idUser      String  @unique @map("id_user") @db.Uuid
-  foto        String? @db.VarChar(255)
+  id           String    @id @default(uuid()) @db.Uuid
+  tenantId     String    @map("tenant_id") @db.Uuid
+  namaNasabah  String    @map("nama_nasabah") @db.VarChar(100)
+  alamat       String?
+  telp         String    @db.VarChar(20)
+  saldoPoin    Decimal   @default(0) @map("saldo_poin") @db.Decimal(14, 2)
+  idUser       String    @unique @map("id_user") @db.Uuid
+  foto         String?   @db.VarChar(255)
+  tanggalLahir DateTime? @map("tanggal_lahir") @db.Date
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
   user   User   @relation(fields: [idUser, tenantId], references: [id, tenantId], onDelete: Restrict)
@@ -144,8 +145,12 @@ model SetorSampah {
   idNasabah String      @map("id_nasabah") @db.Uuid
   status    StatusSetor @default(belum_dikonfirmasi)
 
-  totalHarga Decimal @default(0) @map("total_harga") @db.Decimal(14, 2)
-  totalPoin  Decimal @default(0) @map("total_poin") @db.Decimal(14, 2)
+  kodeSetor    String  @map("kode_setor") @db.VarChar(20)
+  catatan      String? @db.Text
+  catatanAdmin String? @map("catatan_admin") @db.Text
+  totalBeratKg Decimal @default(0) @map("total_berat_kg") @db.Decimal(14, 3)
+  totalHarga   Decimal @default(0) @map("total_harga") @db.Decimal(14, 2)
+  totalPoin    Decimal @default(0) @map("total_poin") @db.Decimal(14, 2)
 
   tenant  Tenant     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
   admin   AdminBank? @relation(fields: [idAdmin, tenantId], references: [id, tenantId], onDelete: Restrict)
@@ -162,6 +167,7 @@ model SetorSampah {
   restoredBy String?   @map("restored_by") @db.Uuid
 
   @@unique([id, tenantId])
+  @@unique([tenantId, kodeSetor])
   @@index([tenantId, status])
   @@index([tenantId, idNasabah])
   @@index([tenantId, deletedAt])
@@ -220,14 +226,15 @@ model Hadiah {
 }
 
 model PenukaranPoin {
-  id           String          @id @default(uuid()) @db.Uuid
-  tenantId     String          @map("tenant_id") @db.Uuid
-  tanggal      DateTime        @default(now())
-  idSetor      String?         @map("id_setor") @db.Uuid
-  idNasabah    String          @map("id_nasabah") @db.Uuid
-  idHadiah     String          @map("id_hadiah") @db.Uuid
-  poinTerpakai Decimal         @map("poin_terpakai") @db.Decimal(14, 2)
-  status       StatusPenukaran @default(diproses)
+  id            String          @id @default(uuid()) @db.Uuid
+  tenantId      String          @map("tenant_id") @db.Uuid
+  tanggal       DateTime        @default(now())
+  idSetor       String?         @map("id_setor") @db.Uuid
+  idNasabah     String          @map("id_nasabah") @db.Uuid
+  idHadiah      String          @map("id_hadiah") @db.Uuid
+  poinTerpakai  Decimal         @map("poin_terpakai") @db.Decimal(14, 2)
+  status        StatusPenukaran @default(diproses)
+  kodePenukaran String          @map("kode_penukaran") @db.VarChar(20)
 
   tenant  Tenant       @relation(fields: [tenantId], references: [id], onDelete: Restrict)
   setor   SetorSampah? @relation(fields: [idSetor, tenantId], references: [id, tenantId], onDelete: Restrict)
@@ -241,6 +248,7 @@ model PenukaranPoin {
   restoredAt DateTime? @map("restored_at")
   restoredBy String?   @map("restored_by") @db.Uuid
 
+  @@unique([tenantId, kodePenukaran])
   @@index([tenantId, idNasabah])
   @@index([tenantId, status])
   @@index([tenantId, deletedAt])
@@ -248,10 +256,14 @@ model PenukaranPoin {
 }
 
 model Tenant {
-  id       String  @id @default(uuid()) @db.Uuid
-  appKey   String  @unique @map("app_key")
-  name     String
-  isActive Boolean @default(true) @map("is_active")
+  id        String  @id @default(uuid()) @db.Uuid
+  appKey    String  @unique @map("app_key")
+  name      String
+  isActive  Boolean @default(true) @map("is_active")
+  email     String? @unique @db.VarChar(255)
+  namaSiswa String? @map("nama_siswa") @db.VarChar(100)
+  kelas     String? @db.VarChar(50)
+  appName   String? @map("app_name") @db.VarChar(100)
 
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime  @updatedAt @map("updated_at")

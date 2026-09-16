@@ -17,6 +17,8 @@ import { HealthModule } from './modules/health/health.module.js';
 import { LoggerModule } from './infra/logger/logger.module.js';
 import { HttpLoggerMiddleware } from './shared/middleware/http-logger.middleware.js';
 import { SeedModule } from './modules/seed/seed.module.js';
+import { AuthModule } from './modules/auth/auth.module.js';
+import { MakerModule } from './modules/maker/maker.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -41,6 +43,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     TenantModule,
     HealthModule,
     LoggerModule,
+    AuthModule,
+    MakerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -55,7 +59,9 @@ export class AppModule implements NestModule {
         '/',
         'docs',
         'docs-json',
-        { path: 'api/v1/seed', method: RequestMethod.ALL },
+        { path: 'api/v1/maker/register', method: RequestMethod.ALL },
+        { path: 'api/v1/maker/login', method: RequestMethod.ALL },
+        { path: 'api/v1/maker/check-key', method: RequestMethod.ALL },
       )
       .forRoutes('*');
 

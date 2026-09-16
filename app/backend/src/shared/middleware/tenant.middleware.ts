@@ -5,29 +5,21 @@ import {
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { TenantService } from '../../modules/tenant/tenant.service.js';
-
-declare global {
-  namespace Express {
-    interface Request {
-      tenant?: any;
-    }
-  }
-}
+import { APP_KEY_HEADER } from '../constants/tenant.constants.js';
 
 @Injectable()
 export class TenantMiddleware implements NestMiddleware {
   constructor(private readonly tenantService: TenantService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    // Define public paths that do not require x-app-key header
-    const publicPaths = ['/seed', '/health', '/docs', '/docs-json'];
+    const publicPaths = ['/health', '/docs', '/docs-json', '/maker/register', '/maker/login', '/maker/check-key'];
     const isPublic = publicPaths.some((path) => req.originalUrl.includes(path));
 
     if (isPublic) {
       return next();
     }
 
-    const appKey = req.headers['x-app-key'] as string;
+    const appKey = req.headers[APP_KEY_HEADER] as string;
 
     if (!appKey) {
       throw new UnauthorizedException('x-app-key header is missing');

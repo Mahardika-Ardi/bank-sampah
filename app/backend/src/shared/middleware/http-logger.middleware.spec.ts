@@ -1,10 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import type { Request, Response, NextFunction } from 'express';
 import { HttpLoggerMiddleware } from './http-logger.middleware.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
 
 describe('HttpLoggerMiddleware', () => {
   let middleware: HttpLoggerMiddleware;
-  let mockLoggerService: Partial<LoggerService>;
+  let mockLoggerService: Pick<LoggerService, 'log' | 'warn' | 'error'>;
+
+  const mockNext = () => vi.fn() as unknown as NextFunction;
 
   beforeEach(() => {
     mockLoggerService = {
@@ -13,7 +16,9 @@ describe('HttpLoggerMiddleware', () => {
       error: vi.fn(),
     };
 
-    middleware = new HttpLoggerMiddleware(mockLoggerService as LoggerService);
+    middleware = new HttpLoggerMiddleware(
+      mockLoggerService as unknown as LoggerService,
+    );
   });
 
   it('should be defined', () => {
@@ -26,20 +31,21 @@ describe('HttpLoggerMiddleware', () => {
       originalUrl: '/api/health',
       ip: '127.0.0.1',
       get: vi.fn().mockReturnValue('Mozilla/5.0'),
-    } as any;
+    } as Pick<Request, 'method' | 'originalUrl' | 'ip' | 'get'>;
 
     const mockRes = {
       statusCode: 200,
-      on: vi.fn((event, callback) => {
+      on: vi.fn((event: string, callback: () => void) => {
         if (event === 'finish') {
           callback();
         }
+        return mockRes;
       }),
-    } as any;
+    } as unknown as Pick<Response, 'statusCode' | 'on'>;
 
-    const nextMock = vi.fn();
+    const nextMock = mockNext();
 
-    middleware.use(mockReq, mockRes, nextMock);
+    middleware.use(mockReq as Request, mockRes as Response, nextMock);
 
     expect(nextMock).toHaveBeenCalledOnce();
     expect(mockLoggerService.log).toHaveBeenCalledWith(
@@ -58,16 +64,16 @@ describe('HttpLoggerMiddleware', () => {
       originalUrl: '/favicon.ico',
       ip: '127.0.0.1',
       get: vi.fn(),
-    } as any;
+    } as Pick<Request, 'method' | 'originalUrl' | 'ip' | 'get'>;
 
     const mockRes = {
       statusCode: 200,
       on: vi.fn(),
-    } as any;
+    } as Pick<Response, 'statusCode' | 'on'>;
 
-    const nextMock = vi.fn();
+    const nextMock = mockNext();
 
-    middleware.use(mockReq, mockRes, nextMock);
+    middleware.use(mockReq as Request, mockRes as Response, nextMock);
 
     expect(nextMock).toHaveBeenCalledOnce();
     expect(mockLoggerService.log).not.toHaveBeenCalled();

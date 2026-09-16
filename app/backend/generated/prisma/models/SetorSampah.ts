@@ -27,11 +27,13 @@ export type AggregateSetorSampah = {
 }
 
 export type SetorSampahAvgAggregateOutputType = {
+  totalBeratKg: runtime.Decimal | null
   totalHarga: runtime.Decimal | null
   totalPoin: runtime.Decimal | null
 }
 
 export type SetorSampahSumAggregateOutputType = {
+  totalBeratKg: runtime.Decimal | null
   totalHarga: runtime.Decimal | null
   totalPoin: runtime.Decimal | null
 }
@@ -43,6 +45,10 @@ export type SetorSampahMinAggregateOutputType = {
   idAdmin: string | null
   idNasabah: string | null
   status: $Enums.StatusSetor | null
+  kodeSetor: string | null
+  catatan: string | null
+  catatanAdmin: string | null
+  totalBeratKg: runtime.Decimal | null
   totalHarga: runtime.Decimal | null
   totalPoin: runtime.Decimal | null
   createdAt: Date | null
@@ -60,6 +66,10 @@ export type SetorSampahMaxAggregateOutputType = {
   idAdmin: string | null
   idNasabah: string | null
   status: $Enums.StatusSetor | null
+  kodeSetor: string | null
+  catatan: string | null
+  catatanAdmin: string | null
+  totalBeratKg: runtime.Decimal | null
   totalHarga: runtime.Decimal | null
   totalPoin: runtime.Decimal | null
   createdAt: Date | null
@@ -77,6 +87,10 @@ export type SetorSampahCountAggregateOutputType = {
   idAdmin: number
   idNasabah: number
   status: number
+  kodeSetor: number
+  catatan: number
+  catatanAdmin: number
+  totalBeratKg: number
   totalHarga: number
   totalPoin: number
   createdAt: number
@@ -90,11 +104,13 @@ export type SetorSampahCountAggregateOutputType = {
 
 
 export type SetorSampahAvgAggregateInputType = {
+  totalBeratKg?: true
   totalHarga?: true
   totalPoin?: true
 }
 
 export type SetorSampahSumAggregateInputType = {
+  totalBeratKg?: true
   totalHarga?: true
   totalPoin?: true
 }
@@ -106,6 +122,10 @@ export type SetorSampahMinAggregateInputType = {
   idAdmin?: true
   idNasabah?: true
   status?: true
+  kodeSetor?: true
+  catatan?: true
+  catatanAdmin?: true
+  totalBeratKg?: true
   totalHarga?: true
   totalPoin?: true
   createdAt?: true
@@ -123,6 +143,10 @@ export type SetorSampahMaxAggregateInputType = {
   idAdmin?: true
   idNasabah?: true
   status?: true
+  kodeSetor?: true
+  catatan?: true
+  catatanAdmin?: true
+  totalBeratKg?: true
   totalHarga?: true
   totalPoin?: true
   createdAt?: true
@@ -140,6 +164,10 @@ export type SetorSampahCountAggregateInputType = {
   idAdmin?: true
   idNasabah?: true
   status?: true
+  kodeSetor?: true
+  catatan?: true
+  catatanAdmin?: true
+  totalBeratKg?: true
   totalHarga?: true
   totalPoin?: true
   createdAt?: true
@@ -244,6 +272,10 @@ export type SetorSampahGroupByOutputType = {
   idAdmin: string | null
   idNasabah: string
   status: $Enums.StatusSetor
+  kodeSetor: string
+  catatan: string | null
+  catatanAdmin: string | null
+  totalBeratKg: runtime.Decimal
   totalHarga: runtime.Decimal
   totalPoin: runtime.Decimal
   createdAt: Date
@@ -284,6 +316,10 @@ export type SetorSampahWhereInput = {
   idAdmin?: Prisma.UuidNullableFilter<"SetorSampah"> | string | null
   idNasabah?: Prisma.UuidFilter<"SetorSampah"> | string
   status?: Prisma.EnumStatusSetorFilter<"SetorSampah"> | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFilter<"SetorSampah"> | string
+  catatan?: Prisma.StringNullableFilter<"SetorSampah"> | string | null
+  catatanAdmin?: Prisma.StringNullableFilter<"SetorSampah"> | string | null
+  totalBeratKg?: Prisma.DecimalFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"SetorSampah"> | Date | string
@@ -306,6 +342,10 @@ export type SetorSampahOrderByWithRelationInput = {
   idAdmin?: Prisma.SortOrderInput | Prisma.SortOrder
   idNasabah?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kodeSetor?: Prisma.SortOrder
+  catatan?: Prisma.SortOrderInput | Prisma.SortOrder
+  catatanAdmin?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalBeratKg?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   totalPoin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -324,6 +364,7 @@ export type SetorSampahOrderByWithRelationInput = {
 export type SetorSampahWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   id_tenantId?: Prisma.SetorSampahIdTenantIdCompoundUniqueInput
+  tenantId_kodeSetor?: Prisma.SetorSampahTenantIdKodeSetorCompoundUniqueInput
   AND?: Prisma.SetorSampahWhereInput | Prisma.SetorSampahWhereInput[]
   OR?: Prisma.SetorSampahWhereInput[]
   NOT?: Prisma.SetorSampahWhereInput | Prisma.SetorSampahWhereInput[]
@@ -332,6 +373,10 @@ export type SetorSampahWhereUniqueInput = Prisma.AtLeast<{
   idAdmin?: Prisma.UuidNullableFilter<"SetorSampah"> | string | null
   idNasabah?: Prisma.UuidFilter<"SetorSampah"> | string
   status?: Prisma.EnumStatusSetorFilter<"SetorSampah"> | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFilter<"SetorSampah"> | string
+  catatan?: Prisma.StringNullableFilter<"SetorSampah"> | string | null
+  catatanAdmin?: Prisma.StringNullableFilter<"SetorSampah"> | string | null
+  totalBeratKg?: Prisma.DecimalFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"SetorSampah"> | Date | string
@@ -345,7 +390,7 @@ export type SetorSampahWhereUniqueInput = Prisma.AtLeast<{
   nasabah?: Prisma.XOR<Prisma.NasabahScalarRelationFilter, Prisma.NasabahWhereInput>
   detail?: Prisma.DetailSetorListRelationFilter
   penukaran?: Prisma.PenukaranPoinListRelationFilter
-}, "id" | "id_tenantId">
+}, "id" | "id_tenantId" | "tenantId_kodeSetor">
 
 export type SetorSampahOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -354,6 +399,10 @@ export type SetorSampahOrderByWithAggregationInput = {
   idAdmin?: Prisma.SortOrderInput | Prisma.SortOrder
   idNasabah?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kodeSetor?: Prisma.SortOrder
+  catatan?: Prisma.SortOrderInput | Prisma.SortOrder
+  catatanAdmin?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalBeratKg?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   totalPoin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -379,6 +428,10 @@ export type SetorSampahScalarWhereWithAggregatesInput = {
   idAdmin?: Prisma.UuidNullableWithAggregatesFilter<"SetorSampah"> | string | null
   idNasabah?: Prisma.UuidWithAggregatesFilter<"SetorSampah"> | string
   status?: Prisma.EnumStatusSetorWithAggregatesFilter<"SetorSampah"> | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringWithAggregatesFilter<"SetorSampah"> | string
+  catatan?: Prisma.StringNullableWithAggregatesFilter<"SetorSampah"> | string | null
+  catatanAdmin?: Prisma.StringNullableWithAggregatesFilter<"SetorSampah"> | string | null
+  totalBeratKg?: Prisma.DecimalWithAggregatesFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalWithAggregatesFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalWithAggregatesFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SetorSampah"> | Date | string
@@ -393,6 +446,10 @@ export type SetorSampahCreateInput = {
   id?: string
   tanggal?: Date | string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -415,6 +472,10 @@ export type SetorSampahUncheckedCreateInput = {
   idAdmin?: string | null
   idNasabah: string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -431,6 +492,10 @@ export type SetorSampahUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -453,6 +518,10 @@ export type SetorSampahUncheckedUpdateInput = {
   idAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idNasabah?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -472,6 +541,10 @@ export type SetorSampahCreateManyInput = {
   idAdmin?: string | null
   idNasabah: string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -486,6 +559,10 @@ export type SetorSampahUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -503,6 +580,10 @@ export type SetorSampahUncheckedUpdateManyInput = {
   idAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idNasabah?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -528,6 +609,11 @@ export type SetorSampahIdTenantIdCompoundUniqueInput = {
   tenantId: string
 }
 
+export type SetorSampahTenantIdKodeSetorCompoundUniqueInput = {
+  tenantId: string
+  kodeSetor: string
+}
+
 export type SetorSampahCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
@@ -535,6 +621,10 @@ export type SetorSampahCountOrderByAggregateInput = {
   idAdmin?: Prisma.SortOrder
   idNasabah?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kodeSetor?: Prisma.SortOrder
+  catatan?: Prisma.SortOrder
+  catatanAdmin?: Prisma.SortOrder
+  totalBeratKg?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   totalPoin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -546,6 +636,7 @@ export type SetorSampahCountOrderByAggregateInput = {
 }
 
 export type SetorSampahAvgOrderByAggregateInput = {
+  totalBeratKg?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   totalPoin?: Prisma.SortOrder
 }
@@ -557,6 +648,10 @@ export type SetorSampahMaxOrderByAggregateInput = {
   idAdmin?: Prisma.SortOrder
   idNasabah?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kodeSetor?: Prisma.SortOrder
+  catatan?: Prisma.SortOrder
+  catatanAdmin?: Prisma.SortOrder
+  totalBeratKg?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   totalPoin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -574,6 +669,10 @@ export type SetorSampahMinOrderByAggregateInput = {
   idAdmin?: Prisma.SortOrder
   idNasabah?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kodeSetor?: Prisma.SortOrder
+  catatan?: Prisma.SortOrder
+  catatanAdmin?: Prisma.SortOrder
+  totalBeratKg?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   totalPoin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -585,6 +684,7 @@ export type SetorSampahMinOrderByAggregateInput = {
 }
 
 export type SetorSampahSumOrderByAggregateInput = {
+  totalBeratKg?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   totalPoin?: Prisma.SortOrder
 }
@@ -763,6 +863,10 @@ export type SetorSampahCreateWithoutAdminInput = {
   id?: string
   tanggal?: Date | string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -782,6 +886,10 @@ export type SetorSampahUncheckedCreateWithoutAdminInput = {
   tanggal?: Date | string
   idNasabah: string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -830,6 +938,10 @@ export type SetorSampahScalarWhereInput = {
   idAdmin?: Prisma.UuidNullableFilter<"SetorSampah"> | string | null
   idNasabah?: Prisma.UuidFilter<"SetorSampah"> | string
   status?: Prisma.EnumStatusSetorFilter<"SetorSampah"> | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFilter<"SetorSampah"> | string
+  catatan?: Prisma.StringNullableFilter<"SetorSampah"> | string | null
+  catatanAdmin?: Prisma.StringNullableFilter<"SetorSampah"> | string | null
+  totalBeratKg?: Prisma.DecimalFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFilter<"SetorSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"SetorSampah"> | Date | string
@@ -844,6 +956,10 @@ export type SetorSampahCreateWithoutNasabahInput = {
   id?: string
   tanggal?: Date | string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -863,6 +979,10 @@ export type SetorSampahUncheckedCreateWithoutNasabahInput = {
   tanggal?: Date | string
   idAdmin?: string | null
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -905,6 +1025,10 @@ export type SetorSampahCreateWithoutDetailInput = {
   id?: string
   tanggal?: Date | string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -926,6 +1050,10 @@ export type SetorSampahUncheckedCreateWithoutDetailInput = {
   idAdmin?: string | null
   idNasabah: string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -957,6 +1085,10 @@ export type SetorSampahUpdateWithoutDetailInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -978,6 +1110,10 @@ export type SetorSampahUncheckedUpdateWithoutDetailInput = {
   idAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idNasabah?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -993,6 +1129,10 @@ export type SetorSampahCreateWithoutPenukaranInput = {
   id?: string
   tanggal?: Date | string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -1014,6 +1154,10 @@ export type SetorSampahUncheckedCreateWithoutPenukaranInput = {
   idAdmin?: string | null
   idNasabah: string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -1045,6 +1189,10 @@ export type SetorSampahUpdateWithoutPenukaranInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1066,6 +1214,10 @@ export type SetorSampahUncheckedUpdateWithoutPenukaranInput = {
   idAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idNasabah?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1081,6 +1233,10 @@ export type SetorSampahCreateWithoutTenantInput = {
   id?: string
   tanggal?: Date | string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -1101,6 +1257,10 @@ export type SetorSampahUncheckedCreateWithoutTenantInput = {
   idAdmin?: string | null
   idNasabah: string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -1144,6 +1304,10 @@ export type SetorSampahCreateManyAdminInput = {
   tanggal?: Date | string
   idNasabah: string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -1158,6 +1322,10 @@ export type SetorSampahUpdateWithoutAdminInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1177,6 +1345,10 @@ export type SetorSampahUncheckedUpdateWithoutAdminInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idNasabah?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1194,6 +1366,10 @@ export type SetorSampahUncheckedUpdateManyWithoutAdminInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idNasabah?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1209,6 +1385,10 @@ export type SetorSampahCreateManyNasabahInput = {
   tanggal?: Date | string
   idAdmin?: string | null
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -1223,6 +1403,10 @@ export type SetorSampahUpdateWithoutNasabahInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1242,6 +1426,10 @@ export type SetorSampahUncheckedUpdateWithoutNasabahInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1259,6 +1447,10 @@ export type SetorSampahUncheckedUpdateManyWithoutNasabahInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1275,6 +1467,10 @@ export type SetorSampahCreateManyTenantInput = {
   idAdmin?: string | null
   idNasabah: string
   status?: $Enums.StatusSetor
+  kodeSetor: string
+  catatan?: string | null
+  catatanAdmin?: string | null
+  totalBeratKg?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
@@ -1289,6 +1485,10 @@ export type SetorSampahUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1309,6 +1509,10 @@ export type SetorSampahUncheckedUpdateWithoutTenantInput = {
   idAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idNasabah?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1327,6 +1531,10 @@ export type SetorSampahUncheckedUpdateManyWithoutTenantInput = {
   idAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idNasabah?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumStatusSetorFieldUpdateOperationsInput | $Enums.StatusSetor
+  kodeSetor?: Prisma.StringFieldUpdateOperationsInput | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  catatanAdmin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totalBeratKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1384,6 +1592,10 @@ export type SetorSampahSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   idAdmin?: boolean
   idNasabah?: boolean
   status?: boolean
+  kodeSetor?: boolean
+  catatan?: boolean
+  catatanAdmin?: boolean
+  totalBeratKg?: boolean
   totalHarga?: boolean
   totalPoin?: boolean
   createdAt?: boolean
@@ -1407,6 +1619,10 @@ export type SetorSampahSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   idAdmin?: boolean
   idNasabah?: boolean
   status?: boolean
+  kodeSetor?: boolean
+  catatan?: boolean
+  catatanAdmin?: boolean
+  totalBeratKg?: boolean
   totalHarga?: boolean
   totalPoin?: boolean
   createdAt?: boolean
@@ -1427,6 +1643,10 @@ export type SetorSampahSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   idAdmin?: boolean
   idNasabah?: boolean
   status?: boolean
+  kodeSetor?: boolean
+  catatan?: boolean
+  catatanAdmin?: boolean
+  totalBeratKg?: boolean
   totalHarga?: boolean
   totalPoin?: boolean
   createdAt?: boolean
@@ -1447,6 +1667,10 @@ export type SetorSampahSelectScalar = {
   idAdmin?: boolean
   idNasabah?: boolean
   status?: boolean
+  kodeSetor?: boolean
+  catatan?: boolean
+  catatanAdmin?: boolean
+  totalBeratKg?: boolean
   totalHarga?: boolean
   totalPoin?: boolean
   createdAt?: boolean
@@ -1457,7 +1681,7 @@ export type SetorSampahSelectScalar = {
   restoredBy?: boolean
 }
 
-export type SetorSampahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "tanggal" | "idAdmin" | "idNasabah" | "status" | "totalHarga" | "totalPoin" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["setorSampah"]>
+export type SetorSampahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "tanggal" | "idAdmin" | "idNasabah" | "status" | "kodeSetor" | "catatan" | "catatanAdmin" | "totalBeratKg" | "totalHarga" | "totalPoin" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["setorSampah"]>
 export type SetorSampahInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   admin?: boolean | Prisma.SetorSampah$adminArgs<ExtArgs>
@@ -1493,6 +1717,10 @@ export type $SetorSampahPayload<ExtArgs extends runtime.Types.Extensions.Interna
     idAdmin: string | null
     idNasabah: string
     status: $Enums.StatusSetor
+    kodeSetor: string
+    catatan: string | null
+    catatanAdmin: string | null
+    totalBeratKg: runtime.Decimal
     totalHarga: runtime.Decimal
     totalPoin: runtime.Decimal
     createdAt: Date
@@ -1935,6 +2163,10 @@ export interface SetorSampahFieldRefs {
   readonly idAdmin: Prisma.FieldRef<"SetorSampah", 'String'>
   readonly idNasabah: Prisma.FieldRef<"SetorSampah", 'String'>
   readonly status: Prisma.FieldRef<"SetorSampah", 'StatusSetor'>
+  readonly kodeSetor: Prisma.FieldRef<"SetorSampah", 'String'>
+  readonly catatan: Prisma.FieldRef<"SetorSampah", 'String'>
+  readonly catatanAdmin: Prisma.FieldRef<"SetorSampah", 'String'>
+  readonly totalBeratKg: Prisma.FieldRef<"SetorSampah", 'Decimal'>
   readonly totalHarga: Prisma.FieldRef<"SetorSampah", 'Decimal'>
   readonly totalPoin: Prisma.FieldRef<"SetorSampah", 'Decimal'>
   readonly createdAt: Prisma.FieldRef<"SetorSampah", 'DateTime'>

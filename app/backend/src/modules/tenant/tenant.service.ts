@@ -12,7 +12,7 @@ export class TenantService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findByAppKey(appKey: string) {
-    const tenant = await this.prisma.tenant.findUnique({
+    const tenant = await this.prisma.tenant.findFirst({
       where: { appKey, deletedAt: null },
     });
 
@@ -44,7 +44,7 @@ export class TenantService {
   }
 
   async findOne(id: string) {
-    const tenant = await this.prisma.tenant.findUnique({
+    const tenant = await this.prisma.tenant.findFirst({
       where: { id, deletedAt: null },
     });
 
@@ -73,6 +73,29 @@ export class TenantService {
         deletedAt: new Date(),
         deletedBy: userId,
         isActive: false,
+      },
+    });
+  }
+
+  async restore(id: string, userId?: string) {
+    const tenant = await this.prisma.tenant.findUnique({
+      where: { id },
+    });
+
+    if (!tenant || !tenant.deletedAt) {
+      throw new NotFoundException(
+        `Deleted tenant with ID ${id} not found`,
+      );
+    }
+
+    return this.prisma.tenant.update({
+      where: { id },
+      data: {
+        deletedAt: null,
+        deletedBy: null,
+        restoredAt: new Date(),
+        restoredBy: userId,
+        isActive: true,
       },
     });
   }

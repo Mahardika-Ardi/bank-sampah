@@ -1,21 +1,32 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TenantController } from './tenant.controller.js';
 import { TenantService } from './tenant.service.js';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
+import type { Request } from 'express';
 
 describe('TenantController', () => {
   let controller: TenantController;
   let service: TenantService;
 
-  const mockTenantService = {
-    create: vi.fn(),
-    findAll: vi.fn(),
-    findOne: vi.fn(),
-    update: vi.fn(),
-    remove: vi.fn(),
+  let mockTenantService: {
+    create: Mock;
+    findAll: Mock;
+    findOne: Mock;
+    update: Mock;
+    remove: Mock;
+    restore: Mock;
   };
 
   beforeEach(async () => {
+    mockTenantService = {
+      create: vi.fn(),
+      findAll: vi.fn(),
+      findOne: vi.fn(),
+      update: vi.fn(),
+      remove: vi.fn(),
+      restore: vi.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TenantController],
       providers: [{ provide: TenantService, useValue: mockTenantService }],
@@ -51,12 +62,48 @@ describe('TenantController', () => {
       const createdTenant = { id: '1', ...dto };
       mockTenantService.create.mockResolvedValue(createdTenant);
 
-      const result = await controller.create(dto as any);
+      const result = await controller.create(dto);
       expect(result).toEqual({
         message: 'Tenant created successfully',
         data: createdTenant,
       });
       expect(service.create).toHaveBeenCalledWith(dto);
+    });
+  });
+
+  describe('restore', () => {
+    it('should restore a soft-deleted tenant and pass user id', async () => {
+      const restored = { id: '1', isActive: true };
+      mockTenantService.restore.mockResolvedValue(restored);
+      const mockReq = {
+        user: { sub: 'user-1', tenantId: 'tenant-1' },
+      } as Pick<Request, 'user'>;
+
+      const result = await controller.restore('1', mockReq as Request);
+
+      expect(result).toEqual({
+        message: 'Tenant restored successfully',
+        data: restored,
+      });
+      expect(service.restore).toHaveBeenCalledWith('1', 'user-1');
+    });
+  });
+
+  describe('remove', () => {
+    it('should soft-delete a tenant and pass user id', async () => {
+      const removed = { id: '1', isActive: false };
+      mockTenantService.remove.mockResolvedValue(removed);
+      const mockReq = {
+        user: { sub: 'user-1', tenantId: 'tenant-1' },
+      } as Pick<Request, 'user'>;
+
+      const result = await controller.remove('1', mockReq as Request);
+
+      expect(result).toEqual({
+        message: 'Tenant deleted successfully',
+        data: removed,
+      });
+      expect(service.remove).toHaveBeenCalledWith('1', 'user-1');
     });
   });
 });

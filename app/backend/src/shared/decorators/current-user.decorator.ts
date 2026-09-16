@@ -1,18 +1,11 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
-import { UserRole } from '../../../generated/prisma/enums.js';
-
-type UserPayload = {
-  id: string;
-  emai: string;
-  phone: string;
-  role: UserRole;
-};
+import type { JwtPayload } from '../types/jwt-payload.type.js';
 
 export const CurrentUser = createParamDecorator(
-  (data: keyof UserPayload, ctx: ExecutionContext) => {
+  (data: keyof JwtPayload, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest<Request>();
-    const user = request.user as UserPayload;
+    const user = request.user;
 
     if (!user) return null;
 

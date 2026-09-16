@@ -43,6 +43,7 @@ export type PenukaranPoinMinAggregateOutputType = {
   idHadiah: string | null
   poinTerpakai: runtime.Decimal | null
   status: $Enums.StatusPenukaran | null
+  kodePenukaran: string | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -60,6 +61,7 @@ export type PenukaranPoinMaxAggregateOutputType = {
   idHadiah: string | null
   poinTerpakai: runtime.Decimal | null
   status: $Enums.StatusPenukaran | null
+  kodePenukaran: string | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -77,6 +79,7 @@ export type PenukaranPoinCountAggregateOutputType = {
   idHadiah: number
   poinTerpakai: number
   status: number
+  kodePenukaran: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -104,6 +107,7 @@ export type PenukaranPoinMinAggregateInputType = {
   idHadiah?: true
   poinTerpakai?: true
   status?: true
+  kodePenukaran?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -121,6 +125,7 @@ export type PenukaranPoinMaxAggregateInputType = {
   idHadiah?: true
   poinTerpakai?: true
   status?: true
+  kodePenukaran?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -138,6 +143,7 @@ export type PenukaranPoinCountAggregateInputType = {
   idHadiah?: true
   poinTerpakai?: true
   status?: true
+  kodePenukaran?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -242,6 +248,7 @@ export type PenukaranPoinGroupByOutputType = {
   idHadiah: string
   poinTerpakai: runtime.Decimal
   status: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -282,6 +289,7 @@ export type PenukaranPoinWhereInput = {
   idHadiah?: Prisma.UuidFilter<"PenukaranPoin"> | string
   poinTerpakai?: Prisma.DecimalFilter<"PenukaranPoin"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFilter<"PenukaranPoin"> | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFilter<"PenukaranPoin"> | string
   createdAt?: Prisma.DateTimeFilter<"PenukaranPoin"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PenukaranPoin"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"PenukaranPoin"> | Date | string | null
@@ -303,6 +311,7 @@ export type PenukaranPoinOrderByWithRelationInput = {
   idHadiah?: Prisma.SortOrder
   poinTerpakai?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kodePenukaran?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -317,6 +326,7 @@ export type PenukaranPoinOrderByWithRelationInput = {
 
 export type PenukaranPoinWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  tenantId_kodePenukaran?: Prisma.PenukaranPoinTenantIdKodePenukaranCompoundUniqueInput
   AND?: Prisma.PenukaranPoinWhereInput | Prisma.PenukaranPoinWhereInput[]
   OR?: Prisma.PenukaranPoinWhereInput[]
   NOT?: Prisma.PenukaranPoinWhereInput | Prisma.PenukaranPoinWhereInput[]
@@ -327,6 +337,7 @@ export type PenukaranPoinWhereUniqueInput = Prisma.AtLeast<{
   idHadiah?: Prisma.UuidFilter<"PenukaranPoin"> | string
   poinTerpakai?: Prisma.DecimalFilter<"PenukaranPoin"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFilter<"PenukaranPoin"> | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFilter<"PenukaranPoin"> | string
   createdAt?: Prisma.DateTimeFilter<"PenukaranPoin"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PenukaranPoin"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"PenukaranPoin"> | Date | string | null
@@ -337,7 +348,7 @@ export type PenukaranPoinWhereUniqueInput = Prisma.AtLeast<{
   setor?: Prisma.XOR<Prisma.SetorSampahNullableScalarRelationFilter, Prisma.SetorSampahWhereInput> | null
   nasabah?: Prisma.XOR<Prisma.NasabahScalarRelationFilter, Prisma.NasabahWhereInput>
   hadiah?: Prisma.XOR<Prisma.HadiahScalarRelationFilter, Prisma.HadiahWhereInput>
-}, "id">
+}, "id" | "tenantId_kodePenukaran">
 
 export type PenukaranPoinOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -348,6 +359,7 @@ export type PenukaranPoinOrderByWithAggregationInput = {
   idHadiah?: Prisma.SortOrder
   poinTerpakai?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kodePenukaran?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -373,6 +385,7 @@ export type PenukaranPoinScalarWhereWithAggregatesInput = {
   idHadiah?: Prisma.UuidWithAggregatesFilter<"PenukaranPoin"> | string
   poinTerpakai?: Prisma.DecimalWithAggregatesFilter<"PenukaranPoin"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranWithAggregatesFilter<"PenukaranPoin"> | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringWithAggregatesFilter<"PenukaranPoin"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PenukaranPoin"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PenukaranPoin"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PenukaranPoin"> | Date | string | null
@@ -386,6 +399,7 @@ export type PenukaranPoinCreateInput = {
   tanggal?: Date | string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -407,6 +421,7 @@ export type PenukaranPoinUncheckedCreateInput = {
   idHadiah: string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -420,6 +435,7 @@ export type PenukaranPoinUpdateInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -441,6 +457,7 @@ export type PenukaranPoinUncheckedUpdateInput = {
   idHadiah?: Prisma.StringFieldUpdateOperationsInput | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -458,6 +475,7 @@ export type PenukaranPoinCreateManyInput = {
   idHadiah: string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -471,6 +489,7 @@ export type PenukaranPoinUpdateManyMutationInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -488,6 +507,7 @@ export type PenukaranPoinUncheckedUpdateManyInput = {
   idHadiah?: Prisma.StringFieldUpdateOperationsInput | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -506,6 +526,11 @@ export type PenukaranPoinOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type PenukaranPoinTenantIdKodePenukaranCompoundUniqueInput = {
+  tenantId: string
+  kodePenukaran: string
+}
+
 export type PenukaranPoinCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
@@ -515,6 +540,7 @@ export type PenukaranPoinCountOrderByAggregateInput = {
   idHadiah?: Prisma.SortOrder
   poinTerpakai?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kodePenukaran?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -536,6 +562,7 @@ export type PenukaranPoinMaxOrderByAggregateInput = {
   idHadiah?: Prisma.SortOrder
   poinTerpakai?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kodePenukaran?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -553,6 +580,7 @@ export type PenukaranPoinMinOrderByAggregateInput = {
   idHadiah?: Prisma.SortOrder
   poinTerpakai?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kodePenukaran?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -742,6 +770,7 @@ export type PenukaranPoinCreateWithoutNasabahInput = {
   tanggal?: Date | string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -760,6 +789,7 @@ export type PenukaranPoinUncheckedCreateWithoutNasabahInput = {
   idHadiah: string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -806,6 +836,7 @@ export type PenukaranPoinScalarWhereInput = {
   idHadiah?: Prisma.UuidFilter<"PenukaranPoin"> | string
   poinTerpakai?: Prisma.DecimalFilter<"PenukaranPoin"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFilter<"PenukaranPoin"> | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFilter<"PenukaranPoin"> | string
   createdAt?: Prisma.DateTimeFilter<"PenukaranPoin"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PenukaranPoin"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"PenukaranPoin"> | Date | string | null
@@ -819,6 +850,7 @@ export type PenukaranPoinCreateWithoutSetorInput = {
   tanggal?: Date | string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -837,6 +869,7 @@ export type PenukaranPoinUncheckedCreateWithoutSetorInput = {
   idHadiah: string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -876,6 +909,7 @@ export type PenukaranPoinCreateWithoutHadiahInput = {
   tanggal?: Date | string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -894,6 +928,7 @@ export type PenukaranPoinUncheckedCreateWithoutHadiahInput = {
   idNasabah: string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -933,6 +968,7 @@ export type PenukaranPoinCreateWithoutTenantInput = {
   tanggal?: Date | string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -952,6 +988,7 @@ export type PenukaranPoinUncheckedCreateWithoutTenantInput = {
   idHadiah: string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -993,6 +1030,7 @@ export type PenukaranPoinCreateManyNasabahInput = {
   idHadiah: string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1006,6 +1044,7 @@ export type PenukaranPoinUpdateWithoutNasabahInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1024,6 +1063,7 @@ export type PenukaranPoinUncheckedUpdateWithoutNasabahInput = {
   idHadiah?: Prisma.StringFieldUpdateOperationsInput | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1039,6 +1079,7 @@ export type PenukaranPoinUncheckedUpdateManyWithoutNasabahInput = {
   idHadiah?: Prisma.StringFieldUpdateOperationsInput | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1054,6 +1095,7 @@ export type PenukaranPoinCreateManySetorInput = {
   idHadiah: string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1067,6 +1109,7 @@ export type PenukaranPoinUpdateWithoutSetorInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1085,6 +1128,7 @@ export type PenukaranPoinUncheckedUpdateWithoutSetorInput = {
   idHadiah?: Prisma.StringFieldUpdateOperationsInput | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1100,6 +1144,7 @@ export type PenukaranPoinUncheckedUpdateManyWithoutSetorInput = {
   idHadiah?: Prisma.StringFieldUpdateOperationsInput | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1115,6 +1160,7 @@ export type PenukaranPoinCreateManyHadiahInput = {
   idNasabah: string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1128,6 +1174,7 @@ export type PenukaranPoinUpdateWithoutHadiahInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1146,6 +1193,7 @@ export type PenukaranPoinUncheckedUpdateWithoutHadiahInput = {
   idNasabah?: Prisma.StringFieldUpdateOperationsInput | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1161,6 +1209,7 @@ export type PenukaranPoinUncheckedUpdateManyWithoutHadiahInput = {
   idNasabah?: Prisma.StringFieldUpdateOperationsInput | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1177,6 +1226,7 @@ export type PenukaranPoinCreateManyTenantInput = {
   idHadiah: string
   poinTerpakai: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.StatusPenukaran
+  kodePenukaran: string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1190,6 +1240,7 @@ export type PenukaranPoinUpdateWithoutTenantInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1209,6 +1260,7 @@ export type PenukaranPoinUncheckedUpdateWithoutTenantInput = {
   idHadiah?: Prisma.StringFieldUpdateOperationsInput | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1225,6 +1277,7 @@ export type PenukaranPoinUncheckedUpdateManyWithoutTenantInput = {
   idHadiah?: Prisma.StringFieldUpdateOperationsInput | string
   poinTerpakai?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusPenukaranFieldUpdateOperationsInput | $Enums.StatusPenukaran
+  kodePenukaran?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1244,6 +1297,7 @@ export type PenukaranPoinSelect<ExtArgs extends runtime.Types.Extensions.Interna
   idHadiah?: boolean
   poinTerpakai?: boolean
   status?: boolean
+  kodePenukaran?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1265,6 +1319,7 @@ export type PenukaranPoinSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   idHadiah?: boolean
   poinTerpakai?: boolean
   status?: boolean
+  kodePenukaran?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1286,6 +1341,7 @@ export type PenukaranPoinSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   idHadiah?: boolean
   poinTerpakai?: boolean
   status?: boolean
+  kodePenukaran?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1307,6 +1363,7 @@ export type PenukaranPoinSelectScalar = {
   idHadiah?: boolean
   poinTerpakai?: boolean
   status?: boolean
+  kodePenukaran?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1315,7 +1372,7 @@ export type PenukaranPoinSelectScalar = {
   restoredBy?: boolean
 }
 
-export type PenukaranPoinOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "tanggal" | "idSetor" | "idNasabah" | "idHadiah" | "poinTerpakai" | "status" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["penukaranPoin"]>
+export type PenukaranPoinOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "tanggal" | "idSetor" | "idNasabah" | "idHadiah" | "poinTerpakai" | "status" | "kodePenukaran" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["penukaranPoin"]>
 export type PenukaranPoinInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   setor?: boolean | Prisma.PenukaranPoin$setorArgs<ExtArgs>
@@ -1352,6 +1409,7 @@ export type $PenukaranPoinPayload<ExtArgs extends runtime.Types.Extensions.Inter
     idHadiah: string
     poinTerpakai: runtime.Decimal
     status: $Enums.StatusPenukaran
+    kodePenukaran: string
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1793,6 +1851,7 @@ export interface PenukaranPoinFieldRefs {
   readonly idHadiah: Prisma.FieldRef<"PenukaranPoin", 'String'>
   readonly poinTerpakai: Prisma.FieldRef<"PenukaranPoin", 'Decimal'>
   readonly status: Prisma.FieldRef<"PenukaranPoin", 'StatusPenukaran'>
+  readonly kodePenukaran: Prisma.FieldRef<"PenukaranPoin", 'String'>
   readonly createdAt: Prisma.FieldRef<"PenukaranPoin", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PenukaranPoin", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"PenukaranPoin", 'DateTime'>

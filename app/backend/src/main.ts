@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { LoggerService } from './infra/logger/logger.service.js';
 import { GlobalExceptionFilter } from './shared/filters/http-exception.filter.js';
+import { APP_KEY_HEADER } from './shared/constants/tenant.constants.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -48,11 +49,11 @@ async function bootstrap() {
     .addApiKey(
       {
         type: 'apiKey',
-        name: 'x-app-key',
+        name: APP_KEY_HEADER,
         in: 'header',
         description: 'Application / Tenant Key for multi-tenancy isolation',
       },
-      'x-app-key',
+      APP_KEY_HEADER,
     )
     .addBearerAuth(
       {

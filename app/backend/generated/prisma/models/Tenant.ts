@@ -29,6 +29,10 @@ export type TenantMinAggregateOutputType = {
   appKey: string | null
   name: string | null
   isActive: boolean | null
+  email: string | null
+  namaSiswa: string | null
+  kelas: string | null
+  appName: string | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -42,6 +46,10 @@ export type TenantMaxAggregateOutputType = {
   appKey: string | null
   name: string | null
   isActive: boolean | null
+  email: string | null
+  namaSiswa: string | null
+  kelas: string | null
+  appName: string | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -55,6 +63,10 @@ export type TenantCountAggregateOutputType = {
   appKey: number
   name: number
   isActive: number
+  email: number
+  namaSiswa: number
+  kelas: number
+  appName: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -70,6 +82,10 @@ export type TenantMinAggregateInputType = {
   appKey?: true
   name?: true
   isActive?: true
+  email?: true
+  namaSiswa?: true
+  kelas?: true
+  appName?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -83,6 +99,10 @@ export type TenantMaxAggregateInputType = {
   appKey?: true
   name?: true
   isActive?: true
+  email?: true
+  namaSiswa?: true
+  kelas?: true
+  appName?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -96,6 +116,10 @@ export type TenantCountAggregateInputType = {
   appKey?: true
   name?: true
   isActive?: true
+  email?: true
+  namaSiswa?: true
+  kelas?: true
+  appName?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -182,6 +206,10 @@ export type TenantGroupByOutputType = {
   appKey: string
   name: string
   isActive: boolean
+  email: string | null
+  namaSiswa: string | null
+  kelas: string | null
+  appName: string | null
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -216,6 +244,10 @@ export type TenantWhereInput = {
   appKey?: Prisma.StringFilter<"Tenant"> | string
   name?: Prisma.StringFilter<"Tenant"> | string
   isActive?: Prisma.BoolFilter<"Tenant"> | boolean
+  email?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  namaSiswa?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  kelas?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  appName?: Prisma.StringNullableFilter<"Tenant"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
@@ -237,6 +269,10 @@ export type TenantOrderByWithRelationInput = {
   appKey?: Prisma.SortOrder
   name?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  namaSiswa?: Prisma.SortOrderInput | Prisma.SortOrder
+  kelas?: Prisma.SortOrderInput | Prisma.SortOrder
+  appName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -256,11 +292,15 @@ export type TenantOrderByWithRelationInput = {
 export type TenantWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   appKey?: string
+  email?: string
   AND?: Prisma.TenantWhereInput | Prisma.TenantWhereInput[]
   OR?: Prisma.TenantWhereInput[]
   NOT?: Prisma.TenantWhereInput | Prisma.TenantWhereInput[]
   name?: Prisma.StringFilter<"Tenant"> | string
   isActive?: Prisma.BoolFilter<"Tenant"> | boolean
+  namaSiswa?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  kelas?: Prisma.StringNullableFilter<"Tenant"> | string | null
+  appName?: Prisma.StringNullableFilter<"Tenant"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Tenant"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Tenant"> | Date | string | null
@@ -275,13 +315,17 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   detailSetors?: Prisma.DetailSetorListRelationFilter
   hadiahs?: Prisma.HadiahListRelationFilter
   penukaranPoins?: Prisma.PenukaranPoinListRelationFilter
-}, "id" | "appKey">
+}, "id" | "appKey" | "email">
 
 export type TenantOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   appKey?: Prisma.SortOrder
   name?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  namaSiswa?: Prisma.SortOrderInput | Prisma.SortOrder
+  kelas?: Prisma.SortOrderInput | Prisma.SortOrder
+  appName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -301,6 +345,10 @@ export type TenantScalarWhereWithAggregatesInput = {
   appKey?: Prisma.StringWithAggregatesFilter<"Tenant"> | string
   name?: Prisma.StringWithAggregatesFilter<"Tenant"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"Tenant"> | boolean
+  email?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
+  namaSiswa?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
+  kelas?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
+  appName?: Prisma.StringNullableWithAggregatesFilter<"Tenant"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Tenant"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Tenant"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Tenant"> | Date | string | null
@@ -314,6 +362,10 @@ export type TenantCreateInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -335,6 +387,10 @@ export type TenantUncheckedCreateInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -356,6 +412,10 @@ export type TenantUpdateInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -377,6 +437,10 @@ export type TenantUncheckedUpdateInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -398,6 +462,10 @@ export type TenantCreateManyInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -411,6 +479,10 @@ export type TenantUpdateManyMutationInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -424,6 +496,10 @@ export type TenantUncheckedUpdateManyInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -442,6 +518,10 @@ export type TenantCountOrderByAggregateInput = {
   appKey?: Prisma.SortOrder
   name?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  namaSiswa?: Prisma.SortOrder
+  kelas?: Prisma.SortOrder
+  appName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -455,6 +535,10 @@ export type TenantMaxOrderByAggregateInput = {
   appKey?: Prisma.SortOrder
   name?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  namaSiswa?: Prisma.SortOrder
+  kelas?: Prisma.SortOrder
+  appName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -468,6 +552,10 @@ export type TenantMinOrderByAggregateInput = {
   appKey?: Prisma.SortOrder
   name?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  namaSiswa?: Prisma.SortOrder
+  kelas?: Prisma.SortOrder
+  appName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -597,6 +685,10 @@ export type TenantCreateWithoutUsersInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -617,6 +709,10 @@ export type TenantUncheckedCreateWithoutUsersInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -653,6 +749,10 @@ export type TenantUpdateWithoutUsersInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -673,6 +773,10 @@ export type TenantUncheckedUpdateWithoutUsersInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -693,6 +797,10 @@ export type TenantCreateWithoutAdminBanksInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -713,6 +821,10 @@ export type TenantUncheckedCreateWithoutAdminBanksInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -749,6 +861,10 @@ export type TenantUpdateWithoutAdminBanksInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -769,6 +885,10 @@ export type TenantUncheckedUpdateWithoutAdminBanksInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -789,6 +909,10 @@ export type TenantCreateWithoutNasabahsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -809,6 +933,10 @@ export type TenantUncheckedCreateWithoutNasabahsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -845,6 +973,10 @@ export type TenantUpdateWithoutNasabahsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -865,6 +997,10 @@ export type TenantUncheckedUpdateWithoutNasabahsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -885,6 +1021,10 @@ export type TenantCreateWithoutKategoriSampahsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -905,6 +1045,10 @@ export type TenantUncheckedCreateWithoutKategoriSampahsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -941,6 +1085,10 @@ export type TenantUpdateWithoutKategoriSampahsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -961,6 +1109,10 @@ export type TenantUncheckedUpdateWithoutKategoriSampahsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -981,6 +1133,10 @@ export type TenantCreateWithoutSetorSampahsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1001,6 +1157,10 @@ export type TenantUncheckedCreateWithoutSetorSampahsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1037,6 +1197,10 @@ export type TenantUpdateWithoutSetorSampahsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1057,6 +1221,10 @@ export type TenantUncheckedUpdateWithoutSetorSampahsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1077,6 +1245,10 @@ export type TenantCreateWithoutDetailSetorsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1097,6 +1269,10 @@ export type TenantUncheckedCreateWithoutDetailSetorsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1133,6 +1309,10 @@ export type TenantUpdateWithoutDetailSetorsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1153,6 +1333,10 @@ export type TenantUncheckedUpdateWithoutDetailSetorsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1173,6 +1357,10 @@ export type TenantCreateWithoutHadiahsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1193,6 +1381,10 @@ export type TenantUncheckedCreateWithoutHadiahsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1229,6 +1421,10 @@ export type TenantUpdateWithoutHadiahsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1249,6 +1445,10 @@ export type TenantUncheckedUpdateWithoutHadiahsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1269,6 +1469,10 @@ export type TenantCreateWithoutPenukaranPoinsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1289,6 +1493,10 @@ export type TenantUncheckedCreateWithoutPenukaranPoinsInput = {
   appKey: string
   name: string
   isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1325,6 +1533,10 @@ export type TenantUpdateWithoutPenukaranPoinsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1345,6 +1557,10 @@ export type TenantUncheckedUpdateWithoutPenukaranPoinsInput = {
   appKey?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1459,6 +1675,10 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   appKey?: boolean
   name?: boolean
   isActive?: boolean
+  email?: boolean
+  namaSiswa?: boolean
+  kelas?: boolean
+  appName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1481,6 +1701,10 @@ export type TenantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   appKey?: boolean
   name?: boolean
   isActive?: boolean
+  email?: boolean
+  namaSiswa?: boolean
+  kelas?: boolean
+  appName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1494,6 +1718,10 @@ export type TenantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   appKey?: boolean
   name?: boolean
   isActive?: boolean
+  email?: boolean
+  namaSiswa?: boolean
+  kelas?: boolean
+  appName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1507,6 +1735,10 @@ export type TenantSelectScalar = {
   appKey?: boolean
   name?: boolean
   isActive?: boolean
+  email?: boolean
+  namaSiswa?: boolean
+  kelas?: boolean
+  appName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1515,7 +1747,7 @@ export type TenantSelectScalar = {
   restoredBy?: boolean
 }
 
-export type TenantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "appKey" | "name" | "isActive" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["tenant"]>
+export type TenantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "appKey" | "name" | "isActive" | "email" | "namaSiswa" | "kelas" | "appName" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["tenant"]>
 export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Tenant$usersArgs<ExtArgs>
   adminBanks?: boolean | Prisma.Tenant$adminBanksArgs<ExtArgs>
@@ -1547,6 +1779,10 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     appKey: string
     name: string
     isActive: boolean
+    email: string | null
+    namaSiswa: string | null
+    kelas: string | null
+    appName: string | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1988,6 +2224,10 @@ export interface TenantFieldRefs {
   readonly appKey: Prisma.FieldRef<"Tenant", 'String'>
   readonly name: Prisma.FieldRef<"Tenant", 'String'>
   readonly isActive: Prisma.FieldRef<"Tenant", 'Boolean'>
+  readonly email: Prisma.FieldRef<"Tenant", 'String'>
+  readonly namaSiswa: Prisma.FieldRef<"Tenant", 'String'>
+  readonly kelas: Prisma.FieldRef<"Tenant", 'String'>
+  readonly appName: Prisma.FieldRef<"Tenant", 'String'>
   readonly createdAt: Prisma.FieldRef<"Tenant", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Tenant", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Tenant", 'DateTime'>
