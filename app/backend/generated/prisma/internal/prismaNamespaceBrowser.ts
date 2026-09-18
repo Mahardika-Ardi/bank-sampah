@@ -59,7 +59,8 @@ export const ModelName = {
   DetailSetor: 'DetailSetor',
   Hadiah: 'Hadiah',
   PenukaranPoin: 'PenukaranPoin',
-  Tenant: 'Tenant'
+  Tenant: 'Tenant',
+  Media: 'Media'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -255,6 +256,26 @@ export const TenantScalarFieldEnum = {
 } as const
 
 export type TenantScalarFieldEnum = (typeof TenantScalarFieldEnum)[keyof typeof TenantScalarFieldEnum]
+
+
+export const MediaScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  kind: 'kind',
+  ownerId: 'ownerId',
+  url: 'url',
+  publicId: 'publicId',
+  mime: 'mime',
+  sizeBytes: 'sizeBytes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy',
+  restoredAt: 'restoredAt',
+  restoredBy: 'restoredBy'
+} as const
+
+export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof MediaScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -5,8 +5,10 @@ import {
   PrismaHealthIndicator,
   MemoryHealthIndicator,
 } from '@nestjs/terminus';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 
+@ApiTags('Health')
 @Controller({ path: 'health', version: VERSION_NEUTRAL })
 export class HealthController {
   constructor(
@@ -18,6 +20,8 @@ export class HealthController {
 
   @Get()
   @HealthCheck()
+  @ApiOperation({ summary: 'Check database and memory health' })
+  @ApiResponse({ status: 200, description: 'System health check completed' })
   async check() {
     const startTime = Date.now();
 

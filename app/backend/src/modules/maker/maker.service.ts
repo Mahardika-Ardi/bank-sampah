@@ -9,24 +9,33 @@ import { randomUUID } from 'crypto';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { HashingService } from '../../shared/hashing/hashing.service.js';
 import { Tenant, UserRole } from '../../../generated/prisma/client.js';
-import { RegisterAppMakerDto } from '../auth/dto/register-maker.dto.js';
+import { RegisterAppMakerDto } from './dto/register-maker.dto.js';
 import { LoginMakerDto } from './dto/login-maker.dto.js';
+import { LoggerService } from '../../infra/logger/logger.service.js';
 
 @Injectable()
 export class MakerService {
+  private readonly context = MakerService.name;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly hashingService: HashingService,
     private readonly jwtService: JwtService,
+    private readonly logger: LoggerService,
   ) {}
 
   async registerMaker(dto: RegisterAppMakerDto) {
+    this.logger.debug(`registerMaker start email=${dto.email}`, {
+      context: this.context,
+    });
     const existingMaker = await this.prisma.user.findFirst({
       where: { username: dto.email },
     });
 
     if (existingMaker) {
-      throw new BadRequestException('Email sudah terdaftar sebagai App Maker.');
+      throw new BadRequestException(
+        `Email ${dto.email} is already registered as an App Maker.`,
+      );
     }
 
     const appKey = randomUUID();
@@ -53,7 +62,6 @@ export class MakerService {
           tenantId: tenant.id,
           adminBank: {
             create: {
-              tenantId: tenant.id,
               namaUnit: dto.namaApp,
               namaPengelola: dto.namaSiswa,
               telp: '-',
@@ -73,6 +81,9 @@ export class MakerService {
     };
     const token = await this.jwtService.signAsync(payload);
 
+    this.logger.log(`registerMaker completed appKey=${tenant.appKey}`, {
+      context: this.context,
+    });
     return {
       id: tenant.id,
       email: user.username,
@@ -86,12 +97,15 @@ export class MakerService {
   }
 
   async loginMaker(dto: LoginMakerDto) {
+    this.logger.debug(`loginMaker start email=${dto.email}`, {
+      context: this.context,
+    });
     const user = await this.prisma.user.findFirst({
       where: { username: dto.email },
     });
 
     if (!user) {
-      throw new UnauthorizedException('Email atau password salah.');
+      throw new UnauthorizedException('Incorrect email or password.');
     }
 
     const isPasswordValid = await this.hashingService.compare(
@@ -99,7 +113,7 @@ export class MakerService {
       user.password,
     );
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Email atau password salah.');
+      throw new UnauthorizedException('Incorrect email or password.');
     }
 
     const tenant = await this.prisma.tenant.findUnique({
@@ -114,6 +128,9 @@ export class MakerService {
     };
     const token = await this.jwtService.signAsync(payload);
 
+    this.logger.log(`loginMaker completed email=${dto.email}`, {
+      context: this.context,
+    });
     return {
       id: user.id,
       email: user.username,
@@ -124,22 +141,32 @@ export class MakerService {
   }
 
   async getProfile(tenant: Tenant) {
-    const [totalNasabah, totalKategoriSampah, totalTransaksiSetor, totalHadiah] =
-      await this.prisma.$transaction([
-        this.prisma.nasabah.count({
-          where: { tenantId: tenant.id, deletedAt: null },
-        }),
-        this.prisma.kategoriSampah.count({
-          where: { tenantId: tenant.id, deletedAt: null },
-        }),
-        this.prisma.setorSampah.count({
-          where: { tenantId: tenant.id, deletedAt: null },
-        }),
+    this.logger.debug(`getProfile start tenantId=${tenant.id}`, {
+      context: this.context,
+    });
+    const [
+      totalNasabah,
+      totalKategoriSampah,
+      totalTransaksiSetor,
+      totalHadiah,
+    ] = await this.prisma.$transaction([
+      this.prisma.nasabah.count({
+        where: { tenantId: tenant.id, deletedAt: null },
+      }),
+      this.prisma.kategoriSampah.count({
+        where: { tenantId: tenant.id, deletedAt: null },
+      }),
+      this.prisma.setorSampah.count({
+        where: { tenantId: tenant.id, deletedAt: null },
+      }),
         this.prisma.hadiah.count({
           where: { tenantId: tenant.id, deletedAt: null },
         }),
       ]);
 
+    this.logger.log(`getProfile completed tenantId=${tenant.id}`, {
+      context: this.context,
+    });
     return {
       id: tenant.id,
       email: tenant.email,
@@ -157,6 +184,9 @@ export class MakerService {
   }
 
   async checkKey(email: string) {
+    this.logger.debug(`checkKey start email=${email}`, {
+      context: this.context,
+    });
     const user = await this.prisma.user.findFirst({
       where: { username: email, role: UserRole.admin_bank, deletedAt: null },
       orderBy: { createdAt: 'asc' },
@@ -165,14 +195,16 @@ export class MakerService {
 
     if (!user) {
       throw new NotFoundException(
-        'Akun App Maker dengan email tersebut tidak ditemukan.',
+        'App Maker account with this email was not found.',
       );
     }
 
+    this.logger.log(`checkKey completed email=${email}`, {
+      context: this.context,
+    });
     return {
       email: user.tenant.email ?? user.username,
-      namaSiswa:
-        user.tenant.namaSiswa ?? user.adminBank?.namaPengelola ?? null,
+      namaSiswa: user.tenant.namaSiswa ?? user.adminBank?.namaPengelola ?? null,
       namaApp: user.tenant.appName ?? user.tenant.name,
       appKey: user.tenant.appKey,
     };

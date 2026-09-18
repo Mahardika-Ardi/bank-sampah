@@ -54,7 +54,7 @@ describe('SeedController', () => {
     const result = await controller.seedDatabase(mockReq as Request);
 
     expect(result).toEqual({
-      message: 'Dummy sample data Bank Sampah berhasil dibuat!',
+        message: 'Bank Sampah sample data generated successfully!',
       data: {
         admin: { username: 'admin_banksampah', password: 'admin123', namaUnit: 'Bank Sampah Asri Jaya' },
         nasabah1: { username: 'nasabah_budi', password: 'password123', namaNasabah: 'Budi Santoso', saldoPoin: 150 },

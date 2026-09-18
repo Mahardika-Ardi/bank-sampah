@@ -262,6 +262,7 @@ export type TenantWhereInput = {
   detailSetors?: Prisma.DetailSetorListRelationFilter
   hadiahs?: Prisma.HadiahListRelationFilter
   penukaranPoins?: Prisma.PenukaranPoinListRelationFilter
+  media?: Prisma.MediaListRelationFilter
 }
 
 export type TenantOrderByWithRelationInput = {
@@ -287,6 +288,7 @@ export type TenantOrderByWithRelationInput = {
   detailSetors?: Prisma.DetailSetorOrderByRelationAggregateInput
   hadiahs?: Prisma.HadiahOrderByRelationAggregateInput
   penukaranPoins?: Prisma.PenukaranPoinOrderByRelationAggregateInput
+  media?: Prisma.MediaOrderByRelationAggregateInput
 }
 
 export type TenantWhereUniqueInput = Prisma.AtLeast<{
@@ -315,6 +317,7 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   detailSetors?: Prisma.DetailSetorListRelationFilter
   hadiahs?: Prisma.HadiahListRelationFilter
   penukaranPoins?: Prisma.PenukaranPoinListRelationFilter
+  media?: Prisma.MediaListRelationFilter
 }, "id" | "appKey" | "email">
 
 export type TenantOrderByWithAggregationInput = {
@@ -380,6 +383,7 @@ export type TenantCreateInput = {
   detailSetors?: Prisma.DetailSetorCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateInput = {
@@ -405,6 +409,7 @@ export type TenantUncheckedCreateInput = {
   detailSetors?: Prisma.DetailSetorUncheckedCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahUncheckedCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUpdateInput = {
@@ -430,6 +435,7 @@ export type TenantUpdateInput = {
   detailSetors?: Prisma.DetailSetorUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateInput = {
@@ -455,6 +461,7 @@ export type TenantUncheckedUpdateInput = {
   detailSetors?: Prisma.DetailSetorUncheckedUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUncheckedUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateManyInput = {
@@ -680,6 +687,20 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
+export type TenantCreateNestedOneWithoutMediaInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutMediaInput, Prisma.TenantUncheckedCreateWithoutMediaInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutMediaInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutMediaNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutMediaInput, Prisma.TenantUncheckedCreateWithoutMediaInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutMediaInput
+  upsert?: Prisma.TenantUpsertWithoutMediaInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutMediaInput, Prisma.TenantUpdateWithoutMediaInput>, Prisma.TenantUncheckedUpdateWithoutMediaInput>
+}
+
 export type TenantCreateWithoutUsersInput = {
   id?: string
   appKey: string
@@ -702,6 +723,7 @@ export type TenantCreateWithoutUsersInput = {
   detailSetors?: Prisma.DetailSetorCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutUsersInput = {
@@ -726,6 +748,7 @@ export type TenantUncheckedCreateWithoutUsersInput = {
   detailSetors?: Prisma.DetailSetorUncheckedCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahUncheckedCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutUsersInput = {
@@ -766,6 +789,7 @@ export type TenantUpdateWithoutUsersInput = {
   detailSetors?: Prisma.DetailSetorUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutUsersInput = {
@@ -790,6 +814,7 @@ export type TenantUncheckedUpdateWithoutUsersInput = {
   detailSetors?: Prisma.DetailSetorUncheckedUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUncheckedUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAdminBanksInput = {
@@ -814,6 +839,7 @@ export type TenantCreateWithoutAdminBanksInput = {
   detailSetors?: Prisma.DetailSetorCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAdminBanksInput = {
@@ -838,6 +864,7 @@ export type TenantUncheckedCreateWithoutAdminBanksInput = {
   detailSetors?: Prisma.DetailSetorUncheckedCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahUncheckedCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAdminBanksInput = {
@@ -878,6 +905,7 @@ export type TenantUpdateWithoutAdminBanksInput = {
   detailSetors?: Prisma.DetailSetorUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAdminBanksInput = {
@@ -902,6 +930,7 @@ export type TenantUncheckedUpdateWithoutAdminBanksInput = {
   detailSetors?: Prisma.DetailSetorUncheckedUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUncheckedUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutNasabahsInput = {
@@ -926,6 +955,7 @@ export type TenantCreateWithoutNasabahsInput = {
   detailSetors?: Prisma.DetailSetorCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutNasabahsInput = {
@@ -950,6 +980,7 @@ export type TenantUncheckedCreateWithoutNasabahsInput = {
   detailSetors?: Prisma.DetailSetorUncheckedCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahUncheckedCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutNasabahsInput = {
@@ -990,6 +1021,7 @@ export type TenantUpdateWithoutNasabahsInput = {
   detailSetors?: Prisma.DetailSetorUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutNasabahsInput = {
@@ -1014,6 +1046,7 @@ export type TenantUncheckedUpdateWithoutNasabahsInput = {
   detailSetors?: Prisma.DetailSetorUncheckedUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUncheckedUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutKategoriSampahsInput = {
@@ -1038,6 +1071,7 @@ export type TenantCreateWithoutKategoriSampahsInput = {
   detailSetors?: Prisma.DetailSetorCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutKategoriSampahsInput = {
@@ -1062,6 +1096,7 @@ export type TenantUncheckedCreateWithoutKategoriSampahsInput = {
   detailSetors?: Prisma.DetailSetorUncheckedCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahUncheckedCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutKategoriSampahsInput = {
@@ -1102,6 +1137,7 @@ export type TenantUpdateWithoutKategoriSampahsInput = {
   detailSetors?: Prisma.DetailSetorUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutKategoriSampahsInput = {
@@ -1126,6 +1162,7 @@ export type TenantUncheckedUpdateWithoutKategoriSampahsInput = {
   detailSetors?: Prisma.DetailSetorUncheckedUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUncheckedUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSetorSampahsInput = {
@@ -1150,6 +1187,7 @@ export type TenantCreateWithoutSetorSampahsInput = {
   detailSetors?: Prisma.DetailSetorCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSetorSampahsInput = {
@@ -1174,6 +1212,7 @@ export type TenantUncheckedCreateWithoutSetorSampahsInput = {
   detailSetors?: Prisma.DetailSetorUncheckedCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahUncheckedCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSetorSampahsInput = {
@@ -1214,6 +1253,7 @@ export type TenantUpdateWithoutSetorSampahsInput = {
   detailSetors?: Prisma.DetailSetorUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSetorSampahsInput = {
@@ -1238,6 +1278,7 @@ export type TenantUncheckedUpdateWithoutSetorSampahsInput = {
   detailSetors?: Prisma.DetailSetorUncheckedUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUncheckedUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDetailSetorsInput = {
@@ -1262,6 +1303,7 @@ export type TenantCreateWithoutDetailSetorsInput = {
   setorSampahs?: Prisma.SetorSampahCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDetailSetorsInput = {
@@ -1286,6 +1328,7 @@ export type TenantUncheckedCreateWithoutDetailSetorsInput = {
   setorSampahs?: Prisma.SetorSampahUncheckedCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahUncheckedCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDetailSetorsInput = {
@@ -1326,6 +1369,7 @@ export type TenantUpdateWithoutDetailSetorsInput = {
   setorSampahs?: Prisma.SetorSampahUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDetailSetorsInput = {
@@ -1350,6 +1394,7 @@ export type TenantUncheckedUpdateWithoutDetailSetorsInput = {
   setorSampahs?: Prisma.SetorSampahUncheckedUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUncheckedUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutHadiahsInput = {
@@ -1374,6 +1419,7 @@ export type TenantCreateWithoutHadiahsInput = {
   setorSampahs?: Prisma.SetorSampahCreateNestedManyWithoutTenantInput
   detailSetors?: Prisma.DetailSetorCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutHadiahsInput = {
@@ -1398,6 +1444,7 @@ export type TenantUncheckedCreateWithoutHadiahsInput = {
   setorSampahs?: Prisma.SetorSampahUncheckedCreateNestedManyWithoutTenantInput
   detailSetors?: Prisma.DetailSetorUncheckedCreateNestedManyWithoutTenantInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutHadiahsInput = {
@@ -1438,6 +1485,7 @@ export type TenantUpdateWithoutHadiahsInput = {
   setorSampahs?: Prisma.SetorSampahUpdateManyWithoutTenantNestedInput
   detailSetors?: Prisma.DetailSetorUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutHadiahsInput = {
@@ -1462,6 +1510,7 @@ export type TenantUncheckedUpdateWithoutHadiahsInput = {
   setorSampahs?: Prisma.SetorSampahUncheckedUpdateManyWithoutTenantNestedInput
   detailSetors?: Prisma.DetailSetorUncheckedUpdateManyWithoutTenantNestedInput
   penukaranPoins?: Prisma.PenukaranPoinUncheckedUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPenukaranPoinsInput = {
@@ -1486,6 +1535,7 @@ export type TenantCreateWithoutPenukaranPoinsInput = {
   setorSampahs?: Prisma.SetorSampahCreateNestedManyWithoutTenantInput
   detailSetors?: Prisma.DetailSetorCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPenukaranPoinsInput = {
@@ -1510,6 +1560,7 @@ export type TenantUncheckedCreateWithoutPenukaranPoinsInput = {
   setorSampahs?: Prisma.SetorSampahUncheckedCreateNestedManyWithoutTenantInput
   detailSetors?: Prisma.DetailSetorUncheckedCreateNestedManyWithoutTenantInput
   hadiahs?: Prisma.HadiahUncheckedCreateNestedManyWithoutTenantInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPenukaranPoinsInput = {
@@ -1550,6 +1601,7 @@ export type TenantUpdateWithoutPenukaranPoinsInput = {
   setorSampahs?: Prisma.SetorSampahUpdateManyWithoutTenantNestedInput
   detailSetors?: Prisma.DetailSetorUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPenukaranPoinsInput = {
@@ -1574,6 +1626,123 @@ export type TenantUncheckedUpdateWithoutPenukaranPoinsInput = {
   setorSampahs?: Prisma.SetorSampahUncheckedUpdateManyWithoutTenantNestedInput
   detailSetors?: Prisma.DetailSetorUncheckedUpdateManyWithoutTenantNestedInput
   hadiahs?: Prisma.HadiahUncheckedUpdateManyWithoutTenantNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutMediaInput = {
+  id?: string
+  appKey: string
+  name: string
+  isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  restoredAt?: Date | string | null
+  restoredBy?: string | null
+  users?: Prisma.UserCreateNestedManyWithoutTenantInput
+  adminBanks?: Prisma.AdminBankCreateNestedManyWithoutTenantInput
+  nasabahs?: Prisma.NasabahCreateNestedManyWithoutTenantInput
+  kategoriSampahs?: Prisma.KategoriSampahCreateNestedManyWithoutTenantInput
+  setorSampahs?: Prisma.SetorSampahCreateNestedManyWithoutTenantInput
+  detailSetors?: Prisma.DetailSetorCreateNestedManyWithoutTenantInput
+  hadiahs?: Prisma.HadiahCreateNestedManyWithoutTenantInput
+  penukaranPoins?: Prisma.PenukaranPoinCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutMediaInput = {
+  id?: string
+  appKey: string
+  name: string
+  isActive?: boolean
+  email?: string | null
+  namaSiswa?: string | null
+  kelas?: string | null
+  appName?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  restoredAt?: Date | string | null
+  restoredBy?: string | null
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutTenantInput
+  adminBanks?: Prisma.AdminBankUncheckedCreateNestedManyWithoutTenantInput
+  nasabahs?: Prisma.NasabahUncheckedCreateNestedManyWithoutTenantInput
+  kategoriSampahs?: Prisma.KategoriSampahUncheckedCreateNestedManyWithoutTenantInput
+  setorSampahs?: Prisma.SetorSampahUncheckedCreateNestedManyWithoutTenantInput
+  detailSetors?: Prisma.DetailSetorUncheckedCreateNestedManyWithoutTenantInput
+  hadiahs?: Prisma.HadiahUncheckedCreateNestedManyWithoutTenantInput
+  penukaranPoins?: Prisma.PenukaranPoinUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutMediaInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutMediaInput, Prisma.TenantUncheckedCreateWithoutMediaInput>
+}
+
+export type TenantUpsertWithoutMediaInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutMediaInput, Prisma.TenantUncheckedUpdateWithoutMediaInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutMediaInput, Prisma.TenantUncheckedCreateWithoutMediaInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutMediaInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutMediaInput, Prisma.TenantUncheckedUpdateWithoutMediaInput>
+}
+
+export type TenantUpdateWithoutMediaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  appKey?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  restoredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  users?: Prisma.UserUpdateManyWithoutTenantNestedInput
+  adminBanks?: Prisma.AdminBankUpdateManyWithoutTenantNestedInput
+  nasabahs?: Prisma.NasabahUpdateManyWithoutTenantNestedInput
+  kategoriSampahs?: Prisma.KategoriSampahUpdateManyWithoutTenantNestedInput
+  setorSampahs?: Prisma.SetorSampahUpdateManyWithoutTenantNestedInput
+  detailSetors?: Prisma.DetailSetorUpdateManyWithoutTenantNestedInput
+  hadiahs?: Prisma.HadiahUpdateManyWithoutTenantNestedInput
+  penukaranPoins?: Prisma.PenukaranPoinUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutMediaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  appKey?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaSiswa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  restoredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  restoredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  users?: Prisma.UserUncheckedUpdateManyWithoutTenantNestedInput
+  adminBanks?: Prisma.AdminBankUncheckedUpdateManyWithoutTenantNestedInput
+  nasabahs?: Prisma.NasabahUncheckedUpdateManyWithoutTenantNestedInput
+  kategoriSampahs?: Prisma.KategoriSampahUncheckedUpdateManyWithoutTenantNestedInput
+  setorSampahs?: Prisma.SetorSampahUncheckedUpdateManyWithoutTenantNestedInput
+  detailSetors?: Prisma.DetailSetorUncheckedUpdateManyWithoutTenantNestedInput
+  hadiahs?: Prisma.HadiahUncheckedUpdateManyWithoutTenantNestedInput
+  penukaranPoins?: Prisma.PenukaranPoinUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 
@@ -1590,6 +1759,7 @@ export type TenantCountOutputType = {
   detailSetors: number
   hadiahs: number
   penukaranPoins: number
+  media: number
 }
 
 export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1601,6 +1771,7 @@ export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   detailSetors?: boolean | TenantCountOutputTypeCountDetailSetorsArgs
   hadiahs?: boolean | TenantCountOutputTypeCountHadiahsArgs
   penukaranPoins?: boolean | TenantCountOutputTypeCountPenukaranPoinsArgs
+  media?: boolean | TenantCountOutputTypeCountMediaArgs
 }
 
 /**
@@ -1669,6 +1840,13 @@ export type TenantCountOutputTypeCountPenukaranPoinsArgs<ExtArgs extends runtime
   where?: Prisma.PenukaranPoinWhereInput
 }
 
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MediaWhereInput
+}
+
 
 export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1693,6 +1871,7 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   detailSetors?: boolean | Prisma.Tenant$detailSetorsArgs<ExtArgs>
   hadiahs?: boolean | Prisma.Tenant$hadiahsArgs<ExtArgs>
   penukaranPoins?: boolean | Prisma.Tenant$penukaranPoinsArgs<ExtArgs>
+  media?: boolean | Prisma.Tenant$mediaArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tenant"]>
 
@@ -1757,6 +1936,7 @@ export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   detailSetors?: boolean | Prisma.Tenant$detailSetorsArgs<ExtArgs>
   hadiahs?: boolean | Prisma.Tenant$hadiahsArgs<ExtArgs>
   penukaranPoins?: boolean | Prisma.Tenant$penukaranPoinsArgs<ExtArgs>
+  media?: boolean | Prisma.Tenant$mediaArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TenantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1773,6 +1953,7 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     detailSetors: Prisma.$DetailSetorPayload<ExtArgs>[]
     hadiahs: Prisma.$HadiahPayload<ExtArgs>[]
     penukaranPoins: Prisma.$PenukaranPoinPayload<ExtArgs>[]
+    media: Prisma.$MediaPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2191,6 +2372,7 @@ export interface Prisma__TenantClient<T, Null = never, ExtArgs extends runtime.T
   detailSetors<T extends Prisma.Tenant$detailSetorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$detailSetorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DetailSetorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   hadiahs<T extends Prisma.Tenant$hadiahsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$hadiahsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HadiahPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   penukaranPoins<T extends Prisma.Tenant$penukaranPoinsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$penukaranPoinsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PenukaranPoinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  media<T extends Prisma.Tenant$mediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$mediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2816,6 +2998,30 @@ export type Tenant$penukaranPoinsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.PenukaranPoinScalarFieldEnum | Prisma.PenukaranPoinScalarFieldEnum[]
+}
+
+/**
+ * Tenant.media
+ */
+export type Tenant$mediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Media
+   */
+  select?: Prisma.MediaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Media
+   */
+  omit?: Prisma.MediaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MediaInclude<ExtArgs> | null
+  where?: Prisma.MediaWhereInput
+  orderBy?: Prisma.MediaOrderByWithRelationInput | Prisma.MediaOrderByWithRelationInput[]
+  cursor?: Prisma.MediaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MediaScalarFieldEnum | Prisma.MediaScalarFieldEnum[]
 }
 
 /**

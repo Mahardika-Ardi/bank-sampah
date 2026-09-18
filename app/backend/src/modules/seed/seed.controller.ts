@@ -4,6 +4,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
 import { SeedService } from './seed.service.js';
 import { APP_KEY_HEADER } from '../../shared/constants/tenant.constants.js';
+import { SEED_RESPONSE } from '../../shared/swagger/api-examples.js';
 
 @ApiTags('Testing & Utility')
 @Controller('seed')
@@ -14,7 +15,11 @@ export class SeedController {
   @HttpCode(HttpStatus.CREATED)
   @ApiHeader({ name: APP_KEY_HEADER, required: true, description: 'Tenant App Key' })
   @ApiOperation({ summary: 'Generate sample dummy test data for tenant' })
-  @ApiResponse({ status: 201, description: 'Seed executed successfully' })
+  @ApiResponse({
+    status: 201,
+    description: 'Seed executed successfully',
+    schema: { example: SEED_RESPONSE },
+  })
   async seedDatabase(@Req() req: Request) {
     const tenant = req.tenant;
     if (!tenant) {
@@ -22,7 +27,7 @@ export class SeedController {
     }
     const data = await this.seedService.runSeed(tenant);
     return {
-      message: 'Dummy sample data Bank Sampah berhasil dibuat!',
+      message: 'Bank Sampah sample data generated successfully!',
       data,
     };
   }

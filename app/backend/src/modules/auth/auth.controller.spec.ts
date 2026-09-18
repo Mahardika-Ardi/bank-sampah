@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard.js';
+import { LoginThrottlerGuard } from '../../shared/guards/login-throttler.guard.js';
 import { ACCESS_TOKEN_COOKIE } from '../../shared/constants/auth.constants.js';
 import { Tenant } from '../../../generated/prisma/client.js';
 
@@ -72,6 +73,8 @@ describe('AuthController', () => {
     })
       .overrideGuard(JwtAuthGuard)
       .useValue({ canActivate: () => true })
+      .overrideGuard(LoginThrottlerGuard)
+      .useValue({ canActivate: () => true })
       .compile();
 
     controller = module.get<AuthController>(AuthController);
@@ -101,7 +104,7 @@ describe('AuthController', () => {
       const response = await controller.registerNasabah(mockRequest as Request, dto);
 
       expect(service.registerNasabah).toHaveBeenCalledWith(mockTenant, dto);
-      expect(response.message).toContain('Registrasi nasabah berhasil');
+      expect(response.message).toContain('Customer registered successfully');
       expect(response.data).toEqual(expectedResult);
     });
   });
@@ -123,7 +126,7 @@ describe('AuthController', () => {
       const response = await controller.registerAdmin(mockRequest as Request, dto);
 
       expect(service.registerAdmin).toHaveBeenCalledWith(mockTenant, dto);
-      expect(response.message).toContain('Pendaftaran unit Bank Sampah berhasil');
+      expect(response.message).toContain('Waste bank unit registered successfully');
       expect(response.data).toEqual(expectedResult);
     });
   });

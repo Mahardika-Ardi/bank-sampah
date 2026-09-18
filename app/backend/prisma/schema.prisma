@@ -21,8 +21,8 @@ enum JenisSampah {
 }
 
 enum StatusSetor {
-  belum_dikonfirmasi
-  diproses
+  menunggu_konfirmasi
+  diverifikasi
   selesai
   ditolak
 }
@@ -30,6 +30,12 @@ enum StatusSetor {
 enum StatusPenukaran {
   diproses
   selesai
+}
+
+enum MediaKind {
+  nasabah_foto
+  kategori_foto
+  hadiah_foto
 }
 
 model User {
@@ -143,7 +149,7 @@ model SetorSampah {
   tanggal   DateTime    @default(now())
   idAdmin   String?     @map("id_admin") @db.Uuid
   idNasabah String      @map("id_nasabah") @db.Uuid
-  status    StatusSetor @default(belum_dikonfirmasi)
+  status    StatusSetor @default(menunggu_konfirmasi)
 
   kodeSetor    String  @map("kode_setor") @db.VarChar(20)
   catatan      String? @db.Text
@@ -280,6 +286,31 @@ model Tenant {
   detailSetors    DetailSetor[]
   hadiahs         Hadiah[]
   penukaranPoins  PenukaranPoin[]
+  media           Media[]
 
   @@map("tenants")
+}
+
+model Media {
+  id        String    @id @default(uuid()) @db.Uuid
+  tenantId  String    @map("tenant_id") @db.Uuid
+  kind      MediaKind
+  ownerId   String    @map("owner_id") @db.Uuid
+  url       String    @db.VarChar(500)
+  publicId  String?   @map("public_id") @db.VarChar(255)
+  mime      String?   @db.VarChar(50)
+  sizeBytes Int?      @map("size_bytes")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  deletedBy  String?   @map("deleted_by") @db.Uuid
+  restoredAt DateTime? @map("restored_at")
+  restoredBy String?   @map("restored_by") @db.Uuid
+
+  @@index([tenantId, kind, ownerId])
+  @@index([tenantId, deletedAt])
+  @@map("media")
 }

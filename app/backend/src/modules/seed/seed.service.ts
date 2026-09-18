@@ -17,14 +17,18 @@ import { LoggerService } from '../../infra/logger/logger.service.js';
 
 @Injectable()
 export class SeedService {
-  private readonly logger = new LoggerService(SeedService.name);
+  private readonly context = SeedService.name;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly hashingService: HashingService,
+    private readonly logger: LoggerService,
   ) {}
 
   async runSeed(tenant: Tenant) {
+    this.logger.debug(`runSeed start tenantId=${tenant.id}`, {
+      context: this.context,
+    });
     this.verifyEnvironment();
 
     try {
@@ -44,6 +48,10 @@ export class SeedService {
 
   private async executeSeedTransaction(tenant: Tenant) {
     return this.prisma.$transaction(async (tx) => {
+      this.logger.debug('seeding users (admin + 2 nasabah)', {
+        context: this.context,
+        tenantId: tenant.id,
+      });
       const hashedPassword = await this.hashingService.hash('admin123');
       const nasabahPassword = await this.hashingService.hash('password123');
 
@@ -64,7 +72,6 @@ export class SeedService {
           tenantId: tenant.id,
           adminBank: {
             create: {
-              tenantId: tenant.id,
               namaUnit: 'Bank Sampah Asri Jaya',
               namaPengelola: 'Bapak H. Sukirman',
               telp: '081234567890',
@@ -91,7 +98,6 @@ export class SeedService {
           tenantId: tenant.id,
           nasabah: {
             create: {
-              tenantId: tenant.id,
               namaNasabah: 'Budi Santoso',
               alamat: 'Jl. Merdeka No. 12, RT 03/05',
               telp: '085678901234',
@@ -120,7 +126,6 @@ export class SeedService {
           tenantId: tenant.id,
           nasabah: {
             create: {
-              tenantId: tenant.id,
               namaNasabah: 'Siti Aminah',
               alamat: 'Jl. Mawar Indah No. 45',
               telp: '081987654321',
@@ -132,6 +137,10 @@ export class SeedService {
         include: { nasabah: true },
       });
 
+      this.logger.debug('seeding 4 waste categories + 3 rewards', {
+        context: this.context,
+        tenantId: tenant.id,
+      });
       const categoriesData = [
         {
           namaKategori: 'Botol Plastik PET (Bersih)',
@@ -227,6 +236,10 @@ export class SeedService {
         });
       }
 
+      this.logger.debug('seeding sample deposit + redemption', {
+        context: this.context,
+        tenantId: tenant.id,
+      });
       const existingDeposit = await tx.setorSampah.findFirst({
         where: { tenantId: tenant.id, kodeSetor: 'STR-202608-1001' },
       });
@@ -244,10 +257,9 @@ export class SeedService {
             totalHarga: 45000,
             catatan: 'Sampah sudah dipilah rapi dalam karung',
             catatanAdmin: 'Penimbangan selesai dan akurat.',
-            detailSetor: {
+            detail: {
               create: [
                 {
-                  tenantId: tenant.id,
                   idKategori: categories['Botol Plastik PET (Bersih)'].id,
                   beratKg: 10,
                   beratEstimasiKg: 10,
@@ -256,7 +268,6 @@ export class SeedService {
                   subtotalHarga: 35000,
                 },
                 {
-                  tenantId: tenant.id,
                   idKategori: categories['Kardus & Karton Bekas'].id,
                   beratKg: 5,
                   beratEstimasiKg: 5,
@@ -296,9 +307,10 @@ export class SeedService {
         }
       }
 
-      this.logger.log(
-        `Successfully seeded sample data for tenant: ${tenant.name}`,
-      );
+      this.logger.log(`runSeed completed tenant=${tenant.name}`, {
+        context: this.context,
+        tenantId: tenant.id,
+      });
 
       return {
         admin: {

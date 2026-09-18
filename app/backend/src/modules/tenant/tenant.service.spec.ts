@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TenantService } from './tenant.service.js';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
+import { LoggerService } from '../../infra/logger/logger.service.js';
 import { NotFoundException, ConflictException } from '@nestjs/common';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
@@ -23,6 +24,10 @@ describe('TenantService', () => {
       providers: [
         TenantService,
         { provide: PrismaService, useValue: mockPrismaService },
+        {
+          provide: LoggerService,
+          useValue: { log: vi.fn(), debug: vi.fn() },
+        },
       ],
     }).compile();
 

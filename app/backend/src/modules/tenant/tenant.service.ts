@@ -6,12 +6,21 @@ import {
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { CreateTenantDto } from './dto/create-tenant.dto.js';
 import { UpdateTenantDto } from './dto/update-tenant.dto.js';
+import { LoggerService } from '../../infra/logger/logger.service.js';
 
 @Injectable()
 export class TenantService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly context = TenantService.name;
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly logger: LoggerService,
+  ) {}
 
   async findByAppKey(appKey: string) {
+    this.logger.debug('findByAppKey start', {
+      context: this.context,
+    });
     const tenant = await this.prisma.tenant.findFirst({
       where: { appKey, deletedAt: null },
     });
@@ -24,6 +33,9 @@ export class TenantService {
   }
 
   async create(createTenantDto: CreateTenantDto) {
+    this.logger.debug(`create start appKey=${createTenantDto.appKey}`, {
+      context: this.context,
+    });
     const existing = await this.prisma.tenant.findUnique({
       where: { appKey: createTenantDto.appKey },
     });
@@ -32,9 +44,13 @@ export class TenantService {
       throw new ConflictException('Tenant with this appKey already exists');
     }
 
-    return this.prisma.tenant.create({
+    const tenant = await this.prisma.tenant.create({
       data: createTenantDto,
     });
+    this.logger.log(`create completed id=${tenant.id}`, {
+      context: this.context,
+    });
+    return tenant;
   }
 
   async findAll() {
@@ -58,16 +74,18 @@ export class TenantService {
   async update(id: string, updateTenantDto: UpdateTenantDto) {
     await this.findOne(id);
 
-    return this.prisma.tenant.update({
+    const tenant = await this.prisma.tenant.update({
       where: { id },
       data: updateTenantDto,
     });
+    this.logger.log(`update completed id=${id}`, { context: this.context });
+    return tenant;
   }
 
   async remove(id: string, userId?: string) {
     await this.findOne(id);
 
-    return this.prisma.tenant.update({
+    const tenant = await this.prisma.tenant.update({
       where: { id },
       data: {
         deletedAt: new Date(),
@@ -75,6 +93,10 @@ export class TenantService {
         isActive: false,
       },
     });
+    this.logger.log(`remove (soft-delete) completed id=${id}`, {
+      context: this.context,
+    });
+    return tenant;
   }
 
   async restore(id: string, userId?: string) {
@@ -88,7 +110,7 @@ export class TenantService {
       );
     }
 
-    return this.prisma.tenant.update({
+    const restored = await this.prisma.tenant.update({
       where: { id },
       data: {
         deletedAt: null,
@@ -98,5 +120,7 @@ export class TenantService {
         isActive: true,
       },
     });
+    this.logger.log(`restore completed id=${id}`, { context: this.context });
+    return restored;
   }
 }

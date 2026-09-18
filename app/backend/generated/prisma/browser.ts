@@ -62,3 +62,8 @@ export type PenukaranPoin = Prisma.PenukaranPoinModel
  * 
  */
 export type Tenant = Prisma.TenantModel
+/**
+ * Model Media
+ * 
+ */
+export type Media = Prisma.MediaModel

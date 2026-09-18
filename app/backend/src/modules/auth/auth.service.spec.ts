@@ -3,6 +3,7 @@ import { AuthService } from './auth.service.js';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { HashingService } from '../../shared/hashing/hashing.service.js';
 import { JwtService } from '@nestjs/jwt';
+import { LoggerService } from '../../infra/logger/logger.service.js';
 import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { Tenant } from '../../../generated/prisma/client.js';
 
@@ -77,6 +78,10 @@ describe('AuthService', () => {
         { provide: PrismaService, useValue: mockPrismaService },
         { provide: HashingService, useValue: mockHashingService },
         { provide: JwtService, useValue: mockJwtService },
+        {
+          provide: LoggerService,
+          useValue: { log: vi.fn(), debug: vi.fn() },
+        },
       ],
     }).compile();
 
@@ -102,5 +107,35 @@ describe('AuthService', () => {
 
     expect(result).toHaveProperty('id', 'user-id');
     expect(result.username).toBe('nasabah_test');
+  });
+
+  it('should omit tenantId from nested nasabah create', async () => {
+    mockPrismaService.user.findFirst.mockResolvedValue(null);
+    const userCreate: Mock = vi.fn().mockResolvedValue({
+      id: 'user-id',
+      username: 'nasabah_test',
+      role: 'nasabah',
+      nasabah: { id: 'nasabah-id' },
+    });
+    mockPrismaService.$transaction.mockImplementation(async (callback) =>
+      callback({ user: { create: userCreate } }),
+    );
+
+    await service.registerNasabah(mockTenant, {
+      username: 'nasabah_test',
+      password: 'password123',
+      namaNasabah: 'Budi',
+      alamat: 'Jl. Merdeka No. 10',
+      telp: '08123456789',
+    });
+
+    const createArg = userCreate.mock.calls[0][0] as {
+      data: {
+        tenantId: string;
+        nasabah: { create: Record<string, unknown> };
+      };
+    };
+    expect(createArg.data.tenantId).toBe('tenant-id');
+    expect(createArg.data.nasabah.create).not.toHaveProperty('tenantId');
   });
 });

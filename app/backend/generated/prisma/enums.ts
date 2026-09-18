@@ -28,8 +28,8 @@ export type JenisSampah = (typeof JenisSampah)[keyof typeof JenisSampah]
 
 
 export const StatusSetor = {
-  belum_dikonfirmasi: 'belum_dikonfirmasi',
-  diproses: 'diproses',
+  menunggu_konfirmasi: 'menunggu_konfirmasi',
+  diverifikasi: 'diverifikasi',
   selesai: 'selesai',
   ditolak: 'ditolak'
 } as const
@@ -43,3 +43,12 @@ export const StatusPenukaran = {
 } as const
 
 export type StatusPenukaran = (typeof StatusPenukaran)[keyof typeof StatusPenukaran]
+
+
+export const MediaKind = {
+  nasabah_foto: 'nasabah_foto',
+  kategori_foto: 'kategori_foto',
+  hadiah_foto: 'hadiah_foto'
+} as const
+
+export type MediaKind = (typeof MediaKind)[keyof typeof MediaKind]

@@ -5,6 +5,7 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { createObserveModule } from '@nestjs/observe';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { PrismaModule } from './infra/prisma/prisma.module.js';
@@ -19,6 +20,12 @@ import { HttpLoggerMiddleware } from './shared/middleware/http-logger.middleware
 import { SeedModule } from './modules/seed/seed.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { MakerModule } from './modules/maker/maker.module.js';
+import { KategoriModule } from './modules/kategori/kategori.module.js';
+import { NasabahModule } from './modules/nasabah/nasabah.module.js';
+import { HadiahModule } from './modules/hadiah/hadiah.module.js';
+import { SetorModule } from './modules/setor/setor.module.js';
+import { PenukaranModule } from './modules/penukaran/penukaran.module.js';
+import { ReportsModule } from './modules/reports/reports.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -26,6 +33,13 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
   imports: [
     SeedModule,
     AppConfigModule,
+    ThrottlerModule.forRoot([
+      {
+        // 5 attempts per 5 minutes per IP on auth routes (brute-force shield)
+        ttl: 5 * 60 * 1000,
+        limit: 5,
+      },
+    ]),
     ObserveModule.forRootAsync({
       imports: [AppConfigModule],
       inject: [ConfigService],
@@ -45,6 +59,12 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     LoggerModule,
     AuthModule,
     MakerModule,
+    KategoriModule,
+    NasabahModule,
+    HadiahModule,
+    SetorModule,
+    PenukaranModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -55,7 +75,6 @@ export class AppModule implements NestModule {
       .apply(TenantMiddleware)
       .exclude(
         'health',
-        'tenant',
         '/',
         'docs',
         'docs-json',

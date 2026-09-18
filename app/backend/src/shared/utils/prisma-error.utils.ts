@@ -1,276 +1,167 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 import { Prisma } from '../../../generated/prisma/client.js';
 
-export function prismaErrors(error: unknown): Promise<unknown> {
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    switch (error.code) {
-      case 'P1000':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Invalid database credentials',
-            data: null,
-            error: 'DATABASE',
-          },
-          HttpStatus.UNAUTHORIZED,
-        );
+export type PrismaErrorDescriptor = {
+  status: HttpStatus;
+  code: string;
+  message: string;
+};
 
-      case 'P1001':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Database not reachable',
-            data: null,
-            error: 'DATABASE',
-          },
-          HttpStatus.SERVICE_UNAVAILABLE,
-        );
+const DESCRIPTORS: Record<string, PrismaErrorDescriptor> = {
+  P1000: {
+    status: HttpStatus.UNAUTHORIZED,
+    code: 'DATABASE',
+    message: 'Invalid database credentials',
+  },
+  P1001: {
+    status: HttpStatus.SERVICE_UNAVAILABLE,
+    code: 'DATABASE',
+    message: 'Database not reachable',
+  },
+  P1002: {
+    status: HttpStatus.GATEWAY_TIMEOUT,
+    code: 'DATABASE',
+    message: 'Database timeout',
+  },
+  P1003: {
+    status: HttpStatus.NOT_FOUND,
+    code: 'DATABASE',
+    message: 'Database not found',
+  },
+  P1008: {
+    status: HttpStatus.GATEWAY_TIMEOUT,
+    code: 'DATABASE',
+    message: 'Query timeout',
+  },
+  P1010: {
+    status: HttpStatus.FORBIDDEN,
+    code: 'DATABASE',
+    message: 'Database access denied',
+  },
+  P1017: {
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    code: 'DATABASE',
+    message: 'Database connection closed',
+  },
+  P2000: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'VALIDATION',
+    message: 'Value too long',
+  },
+  P2001: {
+    status: HttpStatus.NOT_FOUND,
+    code: 'NOT_FOUND',
+    message: 'Data not found',
+  },
+  P2025: {
+    status: HttpStatus.NOT_FOUND,
+    code: 'NOT_FOUND',
+    message: 'Data not found',
+  },
+  P2002: {
+    status: HttpStatus.CONFLICT,
+    code: 'CONFLICT',
+    message: 'Data already exists',
+  },
+  P2003: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'CONSTRAINT',
+    message: 'Foreign key constraint failed',
+  },
+  P2004: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'CONSTRAINT',
+    message: 'Constraint failed',
+  },
+  P2005: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'VALIDATION',
+    message: 'Invalid data',
+  },
+  P2006: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'VALIDATION',
+    message: 'Invalid data',
+  },
+  P2007: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'VALIDATION',
+    message: 'Invalid data',
+  },
+  P2008: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'QUERY',
+    message: 'Query error',
+  },
+  P2009: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'QUERY',
+    message: 'Query error',
+  },
+  P2010: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'QUERY',
+    message: 'Raw query failed',
+  },
+  P2011: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'VALIDATION',
+    message: 'Null constraint violation',
+  },
+  P2012: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'VALIDATION',
+    message: 'Missing required data',
+  },
+  P2013: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'VALIDATION',
+    message: 'Missing required data',
+  },
+  P2014: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'CONSTRAINT',
+    message: 'Relation error',
+  },
+  P2017: {
+    status: HttpStatus.BAD_REQUEST,
+    code: 'CONSTRAINT',
+    message: 'Relation error',
+  },
+  P2015: {
+    status: HttpStatus.NOT_FOUND,
+    code: 'NOT_FOUND',
+    message: 'Related data not found',
+  },
+  P2016: {
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    code: 'QUERY',
+    message: 'Query interpretation error',
+  },
+  P2028: {
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    code: 'TRANSACTION',
+    message: 'Transaction failed',
+  },
+  P2034: {
+    status: HttpStatus.CONFLICT,
+    code: 'CONFLICT',
+    message: 'Deadlock detected',
+  },
+};
 
-      case 'P1002':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Database timeout',
-            data: null,
-            error: 'DATABASE',
-          },
-          HttpStatus.GATEWAY_TIMEOUT,
-        );
-
-      case 'P1003':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Database not found',
-            data: null,
-            error: 'DATABASE',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-
-      case 'P1008':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Query timeout',
-            data: null,
-            error: 'DATABASE',
-          },
-          HttpStatus.GATEWAY_TIMEOUT,
-        );
-
-      case 'P1010':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Database access denied',
-            data: null,
-            error: 'DATABASE',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-
-      case 'P1017':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Database connection closed',
-            data: null,
-            error: 'DATABASE',
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-
-      case 'P2000':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Value too long',
-            data: null,
-            error: 'VALIDATION',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-
-      case 'P2001':
-      case 'P2025':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Data not found',
-            data: null,
-            error: 'NOT_FOUND',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-
-      case 'P2002':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Data already exists',
-            data: null,
-            error: 'CONFLICT',
-          },
-          HttpStatus.CONFLICT,
-        );
-
-      case 'P2003':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Foreign key constraint failed',
-            data: null,
-            error: 'CONSTRAINT',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-
-      case 'P2004':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Constraint failed',
-            data: null,
-            error: 'CONSTRAINT',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-
-      case 'P2005':
-      case 'P2006':
-      case 'P2007':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Invalid data',
-            data: null,
-            error: 'VALIDATION',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-
-      case 'P2008':
-      case 'P2009':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Query error',
-            data: null,
-            error: 'QUERY',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-
-      case 'P2010':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Raw query failed',
-            data: null,
-            error: 'QUERY',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-
-      case 'P2011':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Null constraint violation',
-            data: null,
-            error: 'VALIDATION',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-
-      case 'P2012':
-      case 'P2013':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Missing required data',
-            data: null,
-            error: 'VALIDATION',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-
-      case 'P2014':
-      case 'P2017':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Relation error',
-            data: null,
-            error: 'CONSTRAINT',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-
-      case 'P2015':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Related data not found',
-            data: null,
-            error: 'NOT_FOUND',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-
-      case 'P2016':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Query interpretation error',
-            data: null,
-            error: 'QUERY',
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-
-      case 'P2028':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Transaction failed',
-            data: null,
-            error: 'TRANSACTION',
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-
-      case 'P2034':
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Deadlock detected',
-            data: null,
-            error: 'CONFLICT',
-          },
-          HttpStatus.CONFLICT,
-        );
-
-      default:
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Internal server error',
-            data: null,
-            error: 'UNKNOWN',
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-    }
-  }
-  throw new HttpException(
-    {
-      success: false,
+/**
+ * Maps a Prisma known-request error to an HTTP descriptor.
+ * Pure function — returns a value, never throws.
+ */
+export function describePrismaError(
+  error: Prisma.PrismaClientKnownRequestError,
+): PrismaErrorDescriptor {
+  return (
+    DESCRIPTORS[error.code] ?? {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      code: 'UNKNOWN',
       message: 'Internal server error',
-      data: null,
-      error: 'UNKNOWN',
-    },
-    HttpStatus.INTERNAL_SERVER_ERROR,
+    }
   );
 }

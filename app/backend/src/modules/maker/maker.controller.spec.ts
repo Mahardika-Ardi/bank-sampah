@@ -4,6 +4,7 @@ import { MakerService } from './maker.service.js';
 import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import type { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { LoginThrottlerGuard } from '../../shared/guards/login-throttler.guard.js';
 import { Tenant } from '../../../generated/prisma/client.js';
 import { ACCESS_TOKEN_COOKIE } from '../../shared/constants/auth.constants.js';
 
@@ -62,7 +63,10 @@ describe('MakerController', () => {
         { provide: MakerService, useValue: mockMakerService },
         { provide: ConfigService, useValue: mockConfigService },
       ],
-    }).compile();
+    })
+      .overrideGuard(LoginThrottlerGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<MakerController>(MakerController);
     service = module.get<MakerService>(MakerService);
@@ -133,7 +137,7 @@ describe('MakerController', () => {
 
       expect(service.getProfile).toHaveBeenCalledWith(mockTenant);
       expect(result).toEqual({
-        message: 'Data profile App Maker berhasil diambil',
+        message: 'App Maker profile retrieved successfully',
         data: profile,
       });
     });
@@ -147,7 +151,7 @@ describe('MakerController', () => {
       const result = await controller.checkKey({ email: 'siswa1@smk.sch.id' });
 
       expect(service.checkKey).toHaveBeenCalledWith('siswa1@smk.sch.id');
-      expect(result).toEqual({ message: 'App Key ditemukan', data: keyData });
+      expect(result).toEqual({ message: 'App Key found', data: keyData });
     });
   });
 });

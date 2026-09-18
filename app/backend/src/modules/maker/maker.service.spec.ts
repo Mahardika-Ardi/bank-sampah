@@ -3,6 +3,7 @@ import { MakerService } from './maker.service.js';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { HashingService } from '../../shared/hashing/hashing.service.js';
 import { JwtService } from '@nestjs/jwt';
+import { LoggerService } from '../../infra/logger/logger.service.js';
 import { NotFoundException } from '@nestjs/common';
 import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { Tenant } from '../../../generated/prisma/client.js';
@@ -70,6 +71,10 @@ describe('MakerService', () => {
         { provide: PrismaService, useValue: mockPrismaService },
         { provide: HashingService, useValue: mockHashingService },
         { provide: JwtService, useValue: mockJwtService },
+        {
+          provide: LoggerService,
+          useValue: { log: vi.fn(), debug: vi.fn() },
+        },
       ],
     }).compile();
 
@@ -84,15 +89,12 @@ describe('MakerService', () => {
   describe('registerMaker', () => {
     it('should register app maker with new tenant and app key', async () => {
       mockPrismaService.user.findFirst.mockResolvedValue(null);
+      const userCreate: Mock = vi.fn().mockResolvedValue({
+        id: 'user-id',
+        username: 'maker@smk.sch.id',
+      });
       mockPrismaService.$transaction.mockImplementation(async (callback) =>
-        callback({
-          user: {
-            create: vi.fn().mockResolvedValue({
-              id: 'user-id',
-              username: 'maker@smk.sch.id',
-            }),
-          },
-        }),
+        callback({ user: { create: userCreate } }),
       );
       const dto = {
         email: 'maker@smk.sch.id',
@@ -107,6 +109,15 @@ describe('MakerService', () => {
       expect(result).toHaveProperty('appKey', 'app-key');
       expect(result.email).toBe(dto.email);
       expect(mockHashingService.hash).toHaveBeenCalledWith('password123');
+
+      const createArg = userCreate.mock.calls[0][0] as {
+        data: {
+          tenantId: string;
+          adminBank: { create: Record<string, unknown> };
+        };
+      };
+      expect(createArg.data.tenantId).toBe('tenant-id');
+      expect(createArg.data.adminBank.create).not.toHaveProperty('tenantId');
     });
   });
 

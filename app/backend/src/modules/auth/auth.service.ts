@@ -10,29 +10,37 @@ import { RegisterNasabahBankDto } from './dto/register-nasabah.dto.js';
 import { RegisterAdminBankDto } from './dto/register-admin.dto.js';
 import { LoginDto } from './dto/login.dto.js';
 import { UserRole, Tenant } from '../../../generated/prisma/client.js';
+import { LoggerService } from '../../infra/logger/logger.service.js';
 
 @Injectable()
 export class AuthService {
+  private readonly context = AuthService.name;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly hashingService: HashingService,
     private readonly jwtService: JwtService,
+    private readonly logger: LoggerService,
   ) {}
 
   async registerNasabah(tenant: Tenant, dto: RegisterNasabahBankDto) {
+    this.logger.debug(`registerNasabah start username=${dto.username}`, {
+      context: this.context,
+      tenantId: tenant.id,
+    });
     const existingUser = await this.prisma.user.findFirst({
       where: { username: dto.username, tenantId: tenant.id },
     });
 
     if (existingUser) {
       throw new BadRequestException(
-        'Username sudah digunakan pada database aplikasi Anda.',
+        `Username "${dto.username}" is already used in your application database.`,
       );
     }
 
     const hashedPassword = await this.hashingService.hash(dto.password);
 
-    return await this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
           username: dto.username,
@@ -41,7 +49,6 @@ export class AuthService {
           tenantId: tenant.id,
           nasabah: {
             create: {
-              tenantId: tenant.id,
               namaNasabah: dto.namaNasabah,
               alamat: dto.alamat,
               telp: dto.telp,
@@ -60,22 +67,32 @@ export class AuthService {
         nasabah: user.nasabah,
       };
     });
+
+    this.logger.log(`registerNasabah completed username=${dto.username}`, {
+      context: this.context,
+      tenantId: tenant.id,
+    });
+    return result;
   }
 
   async registerAdmin(tenant: Tenant, dto: RegisterAdminBankDto) {
+    this.logger.debug(`registerAdmin start username=${dto.username}`, {
+      context: this.context,
+      tenantId: tenant.id,
+    });
     const existingUser = await this.prisma.user.findFirst({
       where: { username: dto.username, tenantId: tenant.id },
     });
 
     if (existingUser) {
       throw new BadRequestException(
-        'Username sudah digunakan pada database aplikasi Anda.',
+        `Username "${dto.username}" is already used in your application database.`,
       );
     }
 
     const hashedPassword = await this.hashingService.hash(dto.password);
 
-    return await this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
           username: dto.username,
@@ -84,7 +101,6 @@ export class AuthService {
           tenantId: tenant.id,
           adminBank: {
             create: {
-              tenantId: tenant.id,
               namaUnit: dto.namaUnit,
               namaPengelola: dto.namaPengelola,
               telp: dto.telp,
@@ -101,16 +117,26 @@ export class AuthService {
         adminBank: user.adminBank,
       };
     });
+
+    this.logger.log(`registerAdmin completed username=${dto.username}`, {
+      context: this.context,
+      tenantId: tenant.id,
+    });
+    return result;
   }
 
   async login(tenant: Tenant, dto: LoginDto) {
+    this.logger.debug(`login start username=${dto.username}`, {
+      context: this.context,
+      tenantId: tenant.id,
+    });
     const user = await this.prisma.user.findFirst({
       where: { username: dto.username, tenantId: tenant.id },
       include: { nasabah: true, adminBank: true },
     });
 
     if (!user) {
-      throw new UnauthorizedException('Username atau password salah.');
+      throw new UnauthorizedException('Incorrect username or password.');
     }
 
     const isPasswordValid = await this.hashingService.compare(
@@ -118,7 +144,7 @@ export class AuthService {
       user.password,
     );
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Username atau password salah.');
+      throw new UnauthorizedException('Incorrect username or password.');
     }
 
     const payload = {
@@ -129,11 +155,17 @@ export class AuthService {
     };
     const token = await this.jwtService.signAsync(payload);
 
+    this.logger.log(`login completed username=${dto.username}`, {
+      context: this.context,
+      tenantId: tenant.id,
+    });
     return {
       id: user.id,
       username: user.username,
       role: user.role,
-      nasabah: user.nasabah,
+      nasabah: user.nasabah
+        ? { ...user.nasabah, saldoPoin: Number(user.nasabah.saldoPoin) }
+        : null,
       adminBank: user.adminBank,
       token,
     };
@@ -146,14 +178,16 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('User tidak ditemukan.');
+      throw new UnauthorizedException('User not found.');
     }
 
     return {
       id: user.id,
       username: user.username,
       role: user.role,
-      nasabah: user.nasabah,
+      nasabah: user.nasabah
+        ? { ...user.nasabah, saldoPoin: Number(user.nasabah.saldoPoin) }
+        : null,
       adminBank: user.adminBank,
     };
   }

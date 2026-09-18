@@ -6,6 +6,12 @@ build/
 **/dist
 **/build
 
+# Prisma generated client build artifacts (.ts sources are regenerated via
+# `prisma generate`; stale compiled output shadows them at runtime)
+app/backend/generated/**/*.js
+app/backend/generated/**/*.js.map
+app/backend/generated/**/*.d.ts
+
 # node_modules
 node_modules/
 **/node_modules

@@ -9,16 +9,24 @@ import {
   HttpCode,
   HttpStatus,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiHeader, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { MakerService } from './maker.service.js';
 import { CheckKeyDto } from './dto/check-key.dto.js';
-import { RegisterAppMakerDto } from '../auth/dto/register-maker.dto.js';
+import { RegisterAppMakerDto } from './dto/register-maker.dto.js';
 import { LoginMakerDto } from './dto/login-maker.dto.js';
 import { APP_KEY_HEADER } from '../../shared/constants/tenant.constants.js';
 import { setAccessTokenCookie } from '../../shared/utils/cookie.utils.js';
+import { LoginThrottlerGuard } from '../../shared/guards/login-throttler.guard.js';
+import {
+  MAKER_REGISTER_RESPONSE,
+  MAKER_LOGIN_RESPONSE,
+  MAKER_PROFILE_RESPONSE,
+  MAKER_CHECK_KEY_RESPONSE,
+} from '../../shared/swagger/api-examples.js';
 
 @ApiTags('App Maker')
 @Controller()
@@ -29,8 +37,16 @@ export class MakerController {
   ) {}
 
   @Post('maker/register')
-  @ApiOperation({ summary: 'Register App Maker (Student) account to get x-app-key' })
-  @ApiResponse({ status: 201, description: 'App Maker registered successfully' })
+  @UseGuards(LoginThrottlerGuard)
+  @ApiOperation({
+    summary: 'Register App Maker (Student) account to get x-app-key',
+  })
+  @ApiBody({ type: RegisterAppMakerDto })
+  @ApiResponse({
+    status: 201,
+    description: 'App Maker registered successfully',
+    schema: { example: MAKER_REGISTER_RESPONSE },
+  })
   async registerMaker(
     @Body() dto: RegisterAppMakerDto,
     @Res({ passthrough: true }) res: Response,
@@ -39,15 +55,21 @@ export class MakerController {
     setAccessTokenCookie(this.config, res, data.token);
     return {
       message:
-        'Registrasi App Maker berhasil! Simpan appKey berikut untuk dimasukkan di header x-app-key.',
+        'App Maker registered successfully! Save the following appKey for the x-app-key header.',
       data,
     };
   }
 
   @Post('maker/login')
+  @UseGuards(LoginThrottlerGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Login App Maker account' })
-  @ApiResponse({ status: 200, description: 'Login successful' })
+  @ApiBody({ type: LoginMakerDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful',
+    schema: { example: MAKER_LOGIN_RESPONSE },
+  })
   async loginMaker(
     @Body() dto: LoginMakerDto,
     @Res({ passthrough: true }) res: Response,
@@ -55,15 +77,23 @@ export class MakerController {
     const data = await this.makerService.loginMaker(dto);
     setAccessTokenCookie(this.config, res, data.token);
     return {
-      message: 'Login App Maker berhasil',
+      message: 'App Maker login successful',
       data,
     };
   }
 
   @Get('maker/profile')
-  @ApiHeader({ name: APP_KEY_HEADER, required: true, description: 'Tenant App Key' })
+  @ApiHeader({
+    name: APP_KEY_HEADER,
+    required: true,
+    description: 'Tenant App Key',
+  })
   @ApiOperation({ summary: 'Get App Maker profile with data statistics' })
-  @ApiResponse({ status: 200, description: 'Profile retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile retrieved successfully',
+    schema: { example: MAKER_PROFILE_RESPONSE },
+  })
   async getProfile(@Req() req: Request) {
     const tenant = req.tenant;
     if (!tenant) {
@@ -71,19 +101,24 @@ export class MakerController {
     }
     const data = await this.makerService.getProfile(tenant);
     return {
-      message: 'Data profile App Maker berhasil diambil',
+      message: 'App Maker profile retrieved successfully',
       data,
     };
   }
 
   @Get('maker/check-key')
   @ApiOperation({ summary: 'Find App Key by student email' })
-  @ApiResponse({ status: 200, description: 'App Key found' })
+  @ApiQuery({ name: 'email', example: 'siswa1@smk.sch.id' })
+  @ApiResponse({
+    status: 200,
+    description: 'App Key found',
+    schema: { example: MAKER_CHECK_KEY_RESPONSE },
+  })
   @ApiResponse({ status: 404, description: 'App Maker account not found' })
   async checkKey(@Query() query: CheckKeyDto) {
     const data = await this.makerService.checkKey(query.email);
     return {
-      message: 'App Key ditemukan',
+      message: 'App Key found',
       data,
     };
   }
