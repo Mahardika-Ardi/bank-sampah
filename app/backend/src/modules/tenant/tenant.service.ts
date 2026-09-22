@@ -7,6 +7,10 @@ import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { CreateTenantDto } from './dto/create-tenant.dto.js';
 import { UpdateTenantDto } from './dto/update-tenant.dto.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
+import {
+  tenantAppKeyTakenSelect,
+  tenantDetailSelect,
+} from './tenant-select.js';
 
 @Injectable()
 export class TenantService {
@@ -23,6 +27,7 @@ export class TenantService {
     });
     const tenant = await this.prisma.tenant.findFirst({
       where: { appKey, deletedAt: null },
+      select: tenantDetailSelect,
     });
 
     if (!tenant || !tenant.isActive) {
@@ -38,6 +43,7 @@ export class TenantService {
     });
     const existing = await this.prisma.tenant.findUnique({
       where: { appKey: createTenantDto.appKey },
+      select: tenantAppKeyTakenSelect,
     });
 
     if (existing) {
@@ -56,12 +62,14 @@ export class TenantService {
   async findAll() {
     return this.prisma.tenant.findMany({
       where: { deletedAt: null },
+      select: tenantDetailSelect,
     });
   }
 
   async findOne(id: string) {
     const tenant = await this.prisma.tenant.findFirst({
       where: { id, deletedAt: null },
+      select: tenantDetailSelect,
     });
 
     if (!tenant) {
@@ -102,6 +110,7 @@ export class TenantService {
   async restore(id: string, userId?: string) {
     const tenant = await this.prisma.tenant.findUnique({
       where: { id },
+      select: { id: true, deletedAt: true },
     });
 
     if (!tenant || !tenant.deletedAt) {

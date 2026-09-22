@@ -8,12 +8,14 @@ import { AuthService } from './auth.service.js';
 import { AuthController } from './auth.controller.js';
 import { PrismaModule } from '../../infra/prisma/prisma.module.js';
 import { HashingModule } from '../../shared/hashing/hashing.module.js';
+import { RedisModule } from '../../infra/redis/redis.module.js';
 import { JwtStrategy } from './strategies/jwt.strategy.js';
 
 @Module({
   imports: [
     PrismaModule,
     HashingModule,
+    RedisModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       inject: [ConfigService],

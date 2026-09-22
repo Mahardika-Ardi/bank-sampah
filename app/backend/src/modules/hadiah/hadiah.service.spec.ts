@@ -2,11 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HadiahService } from './hadiah.service.js';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
 import { MediaService } from '../../infra/media/media.service.js';
 import { CloudinaryService } from '../../infra/cloudinary/cloudinary.service.js';
 import { NotFoundException, ConflictException } from '@nestjs/common';
 import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { Tenant } from '../../../generated/prisma/client.js';
+import { ConfigService } from '@nestjs/config';
+import { getQueueToken } from '@nestjs/bullmq';
+import { MEDIA_UPLOAD_QUEUE } from '../../infra/queue/media-upload.job.js';
 
 describe('HadiahService', () => {
   let service: HadiahService;
@@ -21,6 +25,8 @@ describe('HadiahService', () => {
     retirePhotosForOwner: Mock;
   };
   let mockCloudinary: { upload: Mock; destroy: Mock };
+  let mockConfig: { get: Mock };
+  let mockQueue: { add: Mock };
 
   const mockTenant = { id: 'tenant-id' } as Tenant;
 
@@ -31,6 +37,7 @@ describe('HadiahService', () => {
     poinDibutuhkan: '60',
     stok: 30,
     foto: null,
+    photoStatus: 'ready',
   };
 
   beforeEach(async () => {
@@ -56,6 +63,8 @@ describe('HadiahService', () => {
       retirePhotosForOwner: vi.fn().mockResolvedValue([]),
     };
     mockCloudinary = { upload: vi.fn(), destroy: vi.fn() };
+    mockConfig = { get: vi.fn().mockReturnValue(false) };
+    mockQueue = { add: vi.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -64,6 +73,12 @@ describe('HadiahService', () => {
         { provide: MediaService, useValue: mockMedia },
         { provide: CloudinaryService, useValue: mockCloudinary },
         { provide: LoggerService, useValue: { log: vi.fn(), debug: vi.fn() } },
+        { provide: ConfigService, useValue: mockConfig },
+        { provide: getQueueToken(MEDIA_UPLOAD_QUEUE), useValue: mockQueue },
+        {
+          provide: RedisService,
+          useValue: { get: vi.fn(), set: vi.fn(), delByPrefix: vi.fn() },
+        },
       ],
     }).compile();
 
@@ -90,6 +105,7 @@ describe('HadiahService', () => {
         poinDibutuhkan: 60,
         stok: 30,
         foto: null,
+        photoStatus: 'ready',
       });
     });
 
@@ -99,6 +115,30 @@ describe('HadiahService', () => {
       await expect(service.create(mockTenant, dto)).rejects.toThrow(
         ConflictException,
       );
+    });
+
+    it('should enqueue upload and mark processing when PHOTO_ASYNC is on', async () => {
+      mockConfig.get.mockReturnValue(true);
+      mockPrisma.hadiah.findFirst.mockResolvedValue(null);
+      mockPrisma.hadiah.create.mockResolvedValue({
+        ...hadiahRow,
+        foto: null,
+        photoStatus: 'processing',
+      });
+      const file = {
+        buffer: Buffer.from('img'),
+        mimetype: 'image/jpeg',
+        size: 100,
+      } as Express.Multer.File;
+
+      const result = await service.create(mockTenant, dto, file);
+
+      expect(mockQueue.add).toHaveBeenCalledWith(
+        'upload',
+        expect.objectContaining({ ownerId: 'rew-id' }),
+      );
+      expect(mockCloudinary.upload).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ foto: null, photoStatus: 'processing' });
     });
   });
 

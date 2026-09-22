@@ -44,6 +44,7 @@ export type KategoriSampahMinAggregateOutputType = {
   poinPerKg: runtime.Decimal | null
   jenis: $Enums.JenisSampah | null
   foto: string | null
+  photoStatus: $Enums.PhotoStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -60,6 +61,7 @@ export type KategoriSampahMaxAggregateOutputType = {
   poinPerKg: runtime.Decimal | null
   jenis: $Enums.JenisSampah | null
   foto: string | null
+  photoStatus: $Enums.PhotoStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -76,6 +78,7 @@ export type KategoriSampahCountAggregateOutputType = {
   poinPerKg: number
   jenis: number
   foto: number
+  photoStatus: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -104,6 +107,7 @@ export type KategoriSampahMinAggregateInputType = {
   poinPerKg?: true
   jenis?: true
   foto?: true
+  photoStatus?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -120,6 +124,7 @@ export type KategoriSampahMaxAggregateInputType = {
   poinPerKg?: true
   jenis?: true
   foto?: true
+  photoStatus?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -136,6 +141,7 @@ export type KategoriSampahCountAggregateInputType = {
   poinPerKg?: true
   jenis?: true
   foto?: true
+  photoStatus?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -239,6 +245,7 @@ export type KategoriSampahGroupByOutputType = {
   poinPerKg: runtime.Decimal
   jenis: $Enums.JenisSampah
   foto: string | null
+  photoStatus: $Enums.PhotoStatus
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -278,6 +285,7 @@ export type KategoriSampahWhereInput = {
   poinPerKg?: Prisma.DecimalFilter<"KategoriSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFilter<"KategoriSampah"> | $Enums.JenisSampah
   foto?: Prisma.StringNullableFilter<"KategoriSampah"> | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFilter<"KategoriSampah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFilter<"KategoriSampah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KategoriSampah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"KategoriSampah"> | Date | string | null
@@ -296,6 +304,7 @@ export type KategoriSampahOrderByWithRelationInput = {
   poinPerKg?: Prisma.SortOrder
   jenis?: Prisma.SortOrder
   foto?: Prisma.SortOrderInput | Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -319,6 +328,7 @@ export type KategoriSampahWhereUniqueInput = Prisma.AtLeast<{
   poinPerKg?: Prisma.DecimalFilter<"KategoriSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFilter<"KategoriSampah"> | $Enums.JenisSampah
   foto?: Prisma.StringNullableFilter<"KategoriSampah"> | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFilter<"KategoriSampah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFilter<"KategoriSampah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KategoriSampah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"KategoriSampah"> | Date | string | null
@@ -337,6 +347,7 @@ export type KategoriSampahOrderByWithAggregationInput = {
   poinPerKg?: Prisma.SortOrder
   jenis?: Prisma.SortOrder
   foto?: Prisma.SortOrderInput | Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -361,6 +372,7 @@ export type KategoriSampahScalarWhereWithAggregatesInput = {
   poinPerKg?: Prisma.DecimalWithAggregatesFilter<"KategoriSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahWithAggregatesFilter<"KategoriSampah"> | $Enums.JenisSampah
   foto?: Prisma.StringNullableWithAggregatesFilter<"KategoriSampah"> | string | null
+  photoStatus?: Prisma.EnumPhotoStatusWithAggregatesFilter<"KategoriSampah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"KategoriSampah"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"KategoriSampah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"KategoriSampah"> | Date | string | null
@@ -376,6 +388,7 @@ export type KategoriSampahCreateInput = {
   poinPerKg: runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis: $Enums.JenisSampah
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -394,6 +407,7 @@ export type KategoriSampahUncheckedCreateInput = {
   poinPerKg: runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis: $Enums.JenisSampah
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -410,6 +424,7 @@ export type KategoriSampahUpdateInput = {
   poinPerKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFieldUpdateOperationsInput | $Enums.JenisSampah
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -428,6 +443,7 @@ export type KategoriSampahUncheckedUpdateInput = {
   poinPerKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFieldUpdateOperationsInput | $Enums.JenisSampah
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -445,6 +461,7 @@ export type KategoriSampahCreateManyInput = {
   poinPerKg: runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis: $Enums.JenisSampah
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -460,6 +477,7 @@ export type KategoriSampahUpdateManyMutationInput = {
   poinPerKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFieldUpdateOperationsInput | $Enums.JenisSampah
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -476,6 +494,7 @@ export type KategoriSampahUncheckedUpdateManyInput = {
   poinPerKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFieldUpdateOperationsInput | $Enums.JenisSampah
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -502,6 +521,7 @@ export type KategoriSampahCountOrderByAggregateInput = {
   poinPerKg?: Prisma.SortOrder
   jenis?: Prisma.SortOrder
   foto?: Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -523,6 +543,7 @@ export type KategoriSampahMaxOrderByAggregateInput = {
   poinPerKg?: Prisma.SortOrder
   jenis?: Prisma.SortOrder
   foto?: Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -539,6 +560,7 @@ export type KategoriSampahMinOrderByAggregateInput = {
   poinPerKg?: Prisma.SortOrder
   jenis?: Prisma.SortOrder
   foto?: Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -634,6 +656,7 @@ export type KategoriSampahCreateWithoutDetailSetorInput = {
   poinPerKg: runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis: $Enums.JenisSampah
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -651,6 +674,7 @@ export type KategoriSampahUncheckedCreateWithoutDetailSetorInput = {
   poinPerKg: runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis: $Enums.JenisSampah
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -682,6 +706,7 @@ export type KategoriSampahUpdateWithoutDetailSetorInput = {
   poinPerKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFieldUpdateOperationsInput | $Enums.JenisSampah
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -699,6 +724,7 @@ export type KategoriSampahUncheckedUpdateWithoutDetailSetorInput = {
   poinPerKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFieldUpdateOperationsInput | $Enums.JenisSampah
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -714,6 +740,7 @@ export type KategoriSampahCreateWithoutTenantInput = {
   poinPerKg: runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis: $Enums.JenisSampah
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -730,6 +757,7 @@ export type KategoriSampahUncheckedCreateWithoutTenantInput = {
   poinPerKg: runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis: $Enums.JenisSampah
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -776,6 +804,7 @@ export type KategoriSampahScalarWhereInput = {
   poinPerKg?: Prisma.DecimalFilter<"KategoriSampah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFilter<"KategoriSampah"> | $Enums.JenisSampah
   foto?: Prisma.StringNullableFilter<"KategoriSampah"> | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFilter<"KategoriSampah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFilter<"KategoriSampah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KategoriSampah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"KategoriSampah"> | Date | string | null
@@ -791,6 +820,7 @@ export type KategoriSampahCreateManyTenantInput = {
   poinPerKg: runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis: $Enums.JenisSampah
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -806,6 +836,7 @@ export type KategoriSampahUpdateWithoutTenantInput = {
   poinPerKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFieldUpdateOperationsInput | $Enums.JenisSampah
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -822,6 +853,7 @@ export type KategoriSampahUncheckedUpdateWithoutTenantInput = {
   poinPerKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFieldUpdateOperationsInput | $Enums.JenisSampah
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -838,6 +870,7 @@ export type KategoriSampahUncheckedUpdateManyWithoutTenantInput = {
   poinPerKg?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   jenis?: Prisma.EnumJenisSampahFieldUpdateOperationsInput | $Enums.JenisSampah
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -885,6 +918,7 @@ export type KategoriSampahSelect<ExtArgs extends runtime.Types.Extensions.Intern
   poinPerKg?: boolean
   jenis?: boolean
   foto?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -904,6 +938,7 @@ export type KategoriSampahSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   poinPerKg?: boolean
   jenis?: boolean
   foto?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -921,6 +956,7 @@ export type KategoriSampahSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   poinPerKg?: boolean
   jenis?: boolean
   foto?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -938,6 +974,7 @@ export type KategoriSampahSelectScalar = {
   poinPerKg?: boolean
   jenis?: boolean
   foto?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -946,7 +983,7 @@ export type KategoriSampahSelectScalar = {
   restoredBy?: boolean
 }
 
-export type KategoriSampahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "namaKategori" | "hargaPerKg" | "poinPerKg" | "jenis" | "foto" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["kategoriSampah"]>
+export type KategoriSampahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "namaKategori" | "hargaPerKg" | "poinPerKg" | "jenis" | "foto" | "photoStatus" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["kategoriSampah"]>
 export type KategoriSampahInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   detailSetor?: boolean | Prisma.KategoriSampah$detailSetorArgs<ExtArgs>
@@ -973,6 +1010,7 @@ export type $KategoriSampahPayload<ExtArgs extends runtime.Types.Extensions.Inte
     poinPerKg: runtime.Decimal
     jenis: $Enums.JenisSampah
     foto: string | null
+    photoStatus: $Enums.PhotoStatus
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1411,6 +1449,7 @@ export interface KategoriSampahFieldRefs {
   readonly poinPerKg: Prisma.FieldRef<"KategoriSampah", 'Decimal'>
   readonly jenis: Prisma.FieldRef<"KategoriSampah", 'JenisSampah'>
   readonly foto: Prisma.FieldRef<"KategoriSampah", 'String'>
+  readonly photoStatus: Prisma.FieldRef<"KategoriSampah", 'PhotoStatus'>
   readonly createdAt: Prisma.FieldRef<"KategoriSampah", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"KategoriSampah", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"KategoriSampah", 'DateTime'>

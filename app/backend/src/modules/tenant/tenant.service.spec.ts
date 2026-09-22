@@ -55,6 +55,7 @@ describe('TenantService', () => {
       expect(result).toEqual(mockTenant);
       expect(prisma.tenant.findFirst).toHaveBeenCalledWith({
         where: { appKey: 'test-key', deletedAt: null },
+        select: expect.objectContaining({ id: true, appKey: true }),
       });
     });
 

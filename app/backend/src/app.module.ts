@@ -26,6 +26,7 @@ import { HadiahModule } from './modules/hadiah/hadiah.module.js';
 import { SetorModule } from './modules/setor/setor.module.js';
 import { PenukaranModule } from './modules/penukaran/penukaran.module.js';
 import { ReportsModule } from './modules/reports/reports.module.js';
+import { QueueModule } from './infra/queue/queue.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -35,9 +36,13 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     AppConfigModule,
     ThrottlerModule.forRoot([
       {
-        // 5 attempts per 5 minutes per IP on auth routes (brute-force shield)
         ttl: 5 * 60 * 1000,
         limit: 5,
+      },
+      {
+        name: 'banks',
+        ttl: 60 * 1000,
+        limit: 30,
       },
     ]),
     ObserveModule.forRootAsync({
@@ -65,6 +70,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     SetorModule,
     PenukaranModule,
     ReportsModule,
+    QueueModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -81,6 +87,7 @@ export class AppModule implements NestModule {
         { path: 'api/v1/maker/register', method: RequestMethod.ALL },
         { path: 'api/v1/maker/login', method: RequestMethod.ALL },
         { path: 'api/v1/maker/check-key', method: RequestMethod.ALL },
+        { path: 'api/v1/maker/banks', method: RequestMethod.ALL },
       )
       .forRoutes('*');
 

@@ -14,6 +14,7 @@ import {
 import type { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader, ApiBody, ApiQuery } from '@nestjs/swagger';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { MakerService } from './maker.service.js';
 import { CheckKeyDto } from './dto/check-key.dto.js';
 import { RegisterAppMakerDto } from './dto/register-maker.dto.js';
@@ -26,6 +27,7 @@ import {
   MAKER_LOGIN_RESPONSE,
   MAKER_PROFILE_RESPONSE,
   MAKER_CHECK_KEY_RESPONSE,
+  MAKER_BANKS_RESPONSE,
 } from '../../shared/swagger/api-examples.js';
 
 @ApiTags('App Maker')
@@ -119,6 +121,25 @@ export class MakerController {
     const data = await this.makerService.checkKey(query.email);
     return {
       message: 'App Key found',
+      data,
+    };
+  }
+
+  @Get('maker/banks')
+  @UseGuards(LoginThrottlerGuard)
+  @SkipThrottle()
+  @Throttle({ banks: { limit: 30, ttl: 60 * 1000 } })
+  @ApiOperation({ summary: 'List active waste banks for the pre-login bank picker' })
+  @ApiResponse({
+    status: 200,
+    description: 'Active waste banks retrieved successfully',
+    schema: { example: MAKER_BANKS_RESPONSE },
+  })
+  @ApiResponse({ status: 429, description: 'Too many requests, please try again later' })
+  async listBanks() {
+    const data = await this.makerService.listBanks();
+    return {
+      message: 'Active waste banks retrieved successfully',
       data,
     };
   }

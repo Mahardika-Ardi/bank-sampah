@@ -12,7 +12,7 @@ export class TenantMiddleware implements NestMiddleware {
   constructor(private readonly tenantService: TenantService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    const publicPaths = ['/health', '/docs', '/docs-json', '/maker/register', '/maker/login', '/maker/check-key'];
+    const publicPaths = ['/health', '/docs', '/docs-json', '/maker/register', '/maker/login', '/maker/check-key', '/maker/banks'];
     const isPublic = publicPaths.some((path) => req.originalUrl.includes(path));
 
     if (isPublic) {

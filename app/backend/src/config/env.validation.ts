@@ -93,6 +93,13 @@ export const validationSchema = Joi.object({
     .allow('')
     .optional()
     .description('Redis server password.'),
+  // --- Feature Flags ---
+  PHOTO_ASYNC: Joi.boolean()
+    .truthy('true')
+    .falsy('false')
+    .empty('')
+    .default(true)
+    .description('Upload photos asynchronously via BullMQ queue.'),
 });
 
 // --- Configuration Loader Functions ---

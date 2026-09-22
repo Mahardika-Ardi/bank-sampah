@@ -1,9 +1,3 @@
-/**
- * Reusable Swagger response examples drawn from the API contract
- * (`docs/UKK_2026-2027_Package_A_EN.md`). Referenced by controllers so
- * Swagger UI shows realistic payloads without retyping.
- */
-
 export const MAKER_REGISTER_RESPONSE = {
   statusCode: 201,
   success: true,
@@ -64,6 +58,19 @@ export const MAKER_CHECK_KEY_RESPONSE = {
     namaApp: 'Bank Sampah Digital Hub',
     appKey: '97945213-34a7-48cf-baac-8740c1d18765',
   },
+};
+
+export const MAKER_BANKS_RESPONSE = {
+  statusCode: 200,
+  success: true,
+  message: 'Active waste banks retrieved successfully',
+  data: [
+    {
+      id: '160adcd8-d080-4b0d-818f-eb31c7e30976',
+      namaApp: 'Bank Sampah Digital Hub',
+      appKey: '97945213-34a7-48cf-baac-8740c1d18765',
+    },
+  ],
 };
 
 export const AUTH_NASABAH_REGISTER_RESPONSE = {

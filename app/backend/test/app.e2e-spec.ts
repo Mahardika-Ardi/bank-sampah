@@ -486,6 +486,36 @@ describe('Digital Waste Bank API (e2e)', () => {
     expect(windowed.body.data).toHaveProperty('saldoPoinSaatIni');
   });
 
+  it('/api/v1/auth/refresh (POST) - Rotate access token via cookie', async () => {
+    const login = await request(app.getHttpServer())
+      .post('/api/v1/auth/login')
+      .set('x-app-key', appKey)
+      .send({ username: 'nasabah_budi', password: 'password123' })
+      .expect(201);
+
+    const setCookies = login.headers['set-cookie'] as unknown as string[];
+    const refreshCookie = setCookies.find((c) => c.startsWith('refresh_token='));
+    expect(refreshCookie).toBeDefined();
+
+    const refreshed = await request(app.getHttpServer())
+      .post('/api/v1/auth/refresh')
+      .set('x-app-key', appKey)
+      .set('Cookie', refreshCookie.split(';')[0])
+      .expect(200);
+
+    expect(refreshed.body).toHaveProperty('success', true);
+    expect(refreshed.body.data).toHaveProperty('token');
+  });
+
+  it('/api/v1/auth/refresh (POST) - Rejects missing refresh cookie', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/api/v1/auth/refresh')
+      .set('x-app-key', appKey)
+      .expect(401);
+
+    expect(response.body).toHaveProperty('success', false);
+  });
+
   afterAll(async () => {
     await app.close();
   });

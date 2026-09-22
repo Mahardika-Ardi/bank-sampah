@@ -6,6 +6,7 @@ import {
 } from '../../../generated/prisma/client.js';
 import { LoggerService } from '../logger/logger.service.js';
 import { CloudinaryService } from '../cloudinary/cloudinary.service.js';
+import { mediaActiveSelect } from './media-select.js';
 
 export type PhotoAsset = {
   url: string;
@@ -66,6 +67,7 @@ export class MediaService {
     return tx.media.findFirst({
       where: { tenantId, kind, ownerId, deletedAt: null },
       orderBy: { createdAt: 'desc' },
+      select: mediaActiveSelect,
     });
   }
 
@@ -132,6 +134,7 @@ export class MediaService {
         ownerId: input.ownerId,
         deletedAt: null,
       },
+      select: mediaActiveSelect,
     });
     if (actives.length === 0) return [];
     await tx.media.updateMany({

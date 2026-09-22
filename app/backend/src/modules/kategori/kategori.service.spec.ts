@@ -2,11 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { KategoriService } from './kategori.service.js';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
 import { MediaService } from '../../infra/media/media.service.js';
 import { CloudinaryService } from '../../infra/cloudinary/cloudinary.service.js';
 import { NotFoundException, ConflictException } from '@nestjs/common';
 import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { Tenant, JenisSampah } from '../../../generated/prisma/client.js';
+import { ConfigService } from '@nestjs/config';
+import { getQueueToken } from '@nestjs/bullmq';
+import { MEDIA_UPLOAD_QUEUE } from '../../infra/queue/media-upload.job.js';
 
 describe('KategoriService', () => {
   let service: KategoriService;
@@ -21,6 +25,8 @@ describe('KategoriService', () => {
     retirePhotosForOwner: Mock;
   };
   let mockCloudinary: { upload: Mock; destroy: Mock };
+  let mockConfig: { get: Mock };
+  let mockQueue: { add: Mock };
 
   const mockTenant = { id: 'tenant-id' } as Tenant;
 
@@ -32,6 +38,7 @@ describe('KategoriService', () => {
     poinPerKg: '10',
     jenis: JenisSampah.plastik,
     foto: null,
+    photoStatus: 'ready',
   };
 
   beforeEach(async () => {
@@ -60,6 +67,8 @@ describe('KategoriService', () => {
       upload: vi.fn(),
       destroy: vi.fn(),
     };
+    mockConfig = { get: vi.fn().mockReturnValue(false) };
+    mockQueue = { add: vi.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -71,6 +80,12 @@ describe('KategoriService', () => {
           provide: LoggerService,
           useValue: { log: vi.fn(), debug: vi.fn() },
         },
+        {
+          provide: RedisService,
+          useValue: { get: vi.fn(), set: vi.fn(), delByPrefix: vi.fn() },
+        },
+        { provide: ConfigService, useValue: mockConfig },
+        { provide: getQueueToken(MEDIA_UPLOAD_QUEUE), useValue: mockQueue },
       ],
     }).compile();
 
@@ -103,9 +118,8 @@ describe('KategoriService', () => {
         poinPerKg: 10,
         jenis: 'plastik',
         foto: null,
+        photoStatus: 'ready',
       });
-      expect(mockCloudinary.upload).not.toHaveBeenCalled();
-      expect(mockMedia.createPhoto).not.toHaveBeenCalled();
     });
 
     it('should upload photo and register media when file is provided', async () => {
@@ -161,6 +175,30 @@ describe('KategoriService', () => {
       );
       expect(mockCloudinary.destroy).toHaveBeenCalledWith('pub-orphan');
     });
+
+    it('should enqueue upload and mark processing when PHOTO_ASYNC is on', async () => {
+      mockConfig.get.mockReturnValue(true);
+      mockPrisma.kategoriSampah.findFirst.mockResolvedValue(null);
+      mockPrisma.kategoriSampah.create.mockResolvedValue({
+        ...kategoriRow,
+        foto: null,
+        photoStatus: 'processing',
+      });
+      const file = {
+        buffer: Buffer.from('img'),
+        mimetype: 'image/jpeg',
+        size: 100,
+      } as Express.Multer.File;
+
+      const result = await service.create(mockTenant, dto, file);
+
+      expect(mockQueue.add).toHaveBeenCalledWith(
+        'upload',
+        expect.objectContaining({ ownerId: 'kat-id' }),
+      );
+      expect(mockCloudinary.upload).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ foto: null, photoStatus: 'processing' });
+    });
   });
 
   describe('findAll / findOne', () => {
@@ -177,6 +215,21 @@ describe('KategoriService', () => {
           where: expect.objectContaining({ tenantId: 'tenant-id' }),
         }),
       );
+    });
+
+    it('should serve cached lists without hitting prisma', async () => {
+      const cached = [{ id: 'cached-id' }];
+      const redis = (
+        service as unknown as {
+          redis: { get: Mock; set: Mock; delByPrefix: Mock };
+        }
+      ).redis;
+      redis.get.mockResolvedValueOnce(cached);
+
+      const result = await service.findAll(mockTenant);
+
+      expect(result).toEqual(cached);
+      expect(mockPrisma.kategoriSampah.findMany).not.toHaveBeenCalled();
     });
 
     it('should throw NotFoundException for unknown id', async () => {

@@ -7,13 +7,14 @@ import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { HashingService } from '../../shared/hashing/hashing.service.js';
 import {
   UserRole,
-  Tenant,
   JenisSampah,
   StatusSetor,
   StatusPenukaran,
   KategoriSampah,
 } from '../../../generated/prisma/client.js';
+import { TenantContext } from '../tenant/tenant-select.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
 
 @Injectable()
 export class SeedService {
@@ -23,9 +24,10 @@ export class SeedService {
     private readonly prisma: PrismaService,
     private readonly hashingService: HashingService,
     private readonly logger: LoggerService,
+    private readonly redis: RedisService,
   ) {}
 
-  async runSeed(tenant: Tenant) {
+  async runSeed(tenant: TenantContext) {
     this.logger.debug(`runSeed start tenantId=${tenant.id}`, {
       context: this.context,
     });
@@ -46,8 +48,8 @@ export class SeedService {
     }
   }
 
-  private async executeSeedTransaction(tenant: Tenant) {
-    return this.prisma.$transaction(async (tx) => {
+  private async executeSeedTransaction(tenant: TenantContext) {
+    const result = await this.prisma.$transaction(async (tx) => {
       this.logger.debug('seeding users (admin + 2 nasabah)', {
         context: this.context,
         tenantId: tenant.id,
@@ -242,6 +244,7 @@ export class SeedService {
       });
       const existingDeposit = await tx.setorSampah.findFirst({
         where: { tenantId: tenant.id, kodeSetor: 'STR-202608-1001' },
+        select: { id: true },
       });
 
       if (!existingDeposit) {
@@ -283,6 +286,7 @@ export class SeedService {
 
       const existingRedemption = await tx.penukaranPoin.findFirst({
         where: { tenantId: tenant.id, kodePenukaran: 'TKR-202608-5001' },
+        select: { id: true },
       });
 
       if (!existingRedemption) {
@@ -291,6 +295,7 @@ export class SeedService {
             tenantId: tenant.id,
             namaHadiah: 'Voucher Pulsa / E-Wallet Rp 25.000',
           },
+          select: { id: true },
         });
 
         if (voucherReward) {
@@ -334,6 +339,8 @@ export class SeedService {
         hadiahKatalogCount: 3,
       };
     });
+    await this.redis.delByPrefix(RedisService.reportsPrefix(tenant.id));
+    return result;
   }
 
   private handleSeedError(error: unknown): never {

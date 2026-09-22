@@ -43,6 +43,7 @@ export type HadiahMinAggregateOutputType = {
   poinDibutuhkan: runtime.Decimal | null
   stok: number | null
   foto: string | null
+  photoStatus: $Enums.PhotoStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -58,6 +59,7 @@ export type HadiahMaxAggregateOutputType = {
   poinDibutuhkan: runtime.Decimal | null
   stok: number | null
   foto: string | null
+  photoStatus: $Enums.PhotoStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -73,6 +75,7 @@ export type HadiahCountAggregateOutputType = {
   poinDibutuhkan: number
   stok: number
   foto: number
+  photoStatus: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -100,6 +103,7 @@ export type HadiahMinAggregateInputType = {
   poinDibutuhkan?: true
   stok?: true
   foto?: true
+  photoStatus?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -115,6 +119,7 @@ export type HadiahMaxAggregateInputType = {
   poinDibutuhkan?: true
   stok?: true
   foto?: true
+  photoStatus?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -130,6 +135,7 @@ export type HadiahCountAggregateInputType = {
   poinDibutuhkan?: true
   stok?: true
   foto?: true
+  photoStatus?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -232,6 +238,7 @@ export type HadiahGroupByOutputType = {
   poinDibutuhkan: runtime.Decimal
   stok: number
   foto: string | null
+  photoStatus: $Enums.PhotoStatus
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -270,6 +277,7 @@ export type HadiahWhereInput = {
   poinDibutuhkan?: Prisma.DecimalFilter<"Hadiah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFilter<"Hadiah"> | number
   foto?: Prisma.StringNullableFilter<"Hadiah"> | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFilter<"Hadiah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFilter<"Hadiah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hadiah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Hadiah"> | Date | string | null
@@ -287,6 +295,7 @@ export type HadiahOrderByWithRelationInput = {
   poinDibutuhkan?: Prisma.SortOrder
   stok?: Prisma.SortOrder
   foto?: Prisma.SortOrderInput | Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -309,6 +318,7 @@ export type HadiahWhereUniqueInput = Prisma.AtLeast<{
   poinDibutuhkan?: Prisma.DecimalFilter<"Hadiah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFilter<"Hadiah"> | number
   foto?: Prisma.StringNullableFilter<"Hadiah"> | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFilter<"Hadiah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFilter<"Hadiah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hadiah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Hadiah"> | Date | string | null
@@ -326,6 +336,7 @@ export type HadiahOrderByWithAggregationInput = {
   poinDibutuhkan?: Prisma.SortOrder
   stok?: Prisma.SortOrder
   foto?: Prisma.SortOrderInput | Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -349,6 +360,7 @@ export type HadiahScalarWhereWithAggregatesInput = {
   poinDibutuhkan?: Prisma.DecimalWithAggregatesFilter<"Hadiah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntWithAggregatesFilter<"Hadiah"> | number
   foto?: Prisma.StringNullableWithAggregatesFilter<"Hadiah"> | string | null
+  photoStatus?: Prisma.EnumPhotoStatusWithAggregatesFilter<"Hadiah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Hadiah"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Hadiah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Hadiah"> | Date | string | null
@@ -363,6 +375,7 @@ export type HadiahCreateInput = {
   poinDibutuhkan: runtime.Decimal | runtime.DecimalJsLike | number | string
   stok: number
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -380,6 +393,7 @@ export type HadiahUncheckedCreateInput = {
   poinDibutuhkan: runtime.Decimal | runtime.DecimalJsLike | number | string
   stok: number
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -395,6 +409,7 @@ export type HadiahUpdateInput = {
   poinDibutuhkan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFieldUpdateOperationsInput | number
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -412,6 +427,7 @@ export type HadiahUncheckedUpdateInput = {
   poinDibutuhkan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFieldUpdateOperationsInput | number
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -428,6 +444,7 @@ export type HadiahCreateManyInput = {
   poinDibutuhkan: runtime.Decimal | runtime.DecimalJsLike | number | string
   stok: number
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -442,6 +459,7 @@ export type HadiahUpdateManyMutationInput = {
   poinDibutuhkan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFieldUpdateOperationsInput | number
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -457,6 +475,7 @@ export type HadiahUncheckedUpdateManyInput = {
   poinDibutuhkan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFieldUpdateOperationsInput | number
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -482,6 +501,7 @@ export type HadiahCountOrderByAggregateInput = {
   poinDibutuhkan?: Prisma.SortOrder
   stok?: Prisma.SortOrder
   foto?: Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -502,6 +522,7 @@ export type HadiahMaxOrderByAggregateInput = {
   poinDibutuhkan?: Prisma.SortOrder
   stok?: Prisma.SortOrder
   foto?: Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -517,6 +538,7 @@ export type HadiahMinOrderByAggregateInput = {
   poinDibutuhkan?: Prisma.SortOrder
   stok?: Prisma.SortOrder
   foto?: Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -615,6 +637,7 @@ export type HadiahCreateWithoutPenukaranInput = {
   poinDibutuhkan: runtime.Decimal | runtime.DecimalJsLike | number | string
   stok: number
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -631,6 +654,7 @@ export type HadiahUncheckedCreateWithoutPenukaranInput = {
   poinDibutuhkan: runtime.Decimal | runtime.DecimalJsLike | number | string
   stok: number
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -661,6 +685,7 @@ export type HadiahUpdateWithoutPenukaranInput = {
   poinDibutuhkan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFieldUpdateOperationsInput | number
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -677,6 +702,7 @@ export type HadiahUncheckedUpdateWithoutPenukaranInput = {
   poinDibutuhkan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFieldUpdateOperationsInput | number
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -691,6 +717,7 @@ export type HadiahCreateWithoutTenantInput = {
   poinDibutuhkan: runtime.Decimal | runtime.DecimalJsLike | number | string
   stok: number
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -706,6 +733,7 @@ export type HadiahUncheckedCreateWithoutTenantInput = {
   poinDibutuhkan: runtime.Decimal | runtime.DecimalJsLike | number | string
   stok: number
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -751,6 +779,7 @@ export type HadiahScalarWhereInput = {
   poinDibutuhkan?: Prisma.DecimalFilter<"Hadiah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFilter<"Hadiah"> | number
   foto?: Prisma.StringNullableFilter<"Hadiah"> | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFilter<"Hadiah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFilter<"Hadiah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hadiah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Hadiah"> | Date | string | null
@@ -765,6 +794,7 @@ export type HadiahCreateManyTenantInput = {
   poinDibutuhkan: runtime.Decimal | runtime.DecimalJsLike | number | string
   stok: number
   foto?: string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -779,6 +809,7 @@ export type HadiahUpdateWithoutTenantInput = {
   poinDibutuhkan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFieldUpdateOperationsInput | number
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -794,6 +825,7 @@ export type HadiahUncheckedUpdateWithoutTenantInput = {
   poinDibutuhkan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFieldUpdateOperationsInput | number
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -809,6 +841,7 @@ export type HadiahUncheckedUpdateManyWithoutTenantInput = {
   poinDibutuhkan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stok?: Prisma.IntFieldUpdateOperationsInput | number
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -855,6 +888,7 @@ export type HadiahSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   poinDibutuhkan?: boolean
   stok?: boolean
   foto?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -873,6 +907,7 @@ export type HadiahSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   poinDibutuhkan?: boolean
   stok?: boolean
   foto?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -889,6 +924,7 @@ export type HadiahSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   poinDibutuhkan?: boolean
   stok?: boolean
   foto?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -905,6 +941,7 @@ export type HadiahSelectScalar = {
   poinDibutuhkan?: boolean
   stok?: boolean
   foto?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -913,7 +950,7 @@ export type HadiahSelectScalar = {
   restoredBy?: boolean
 }
 
-export type HadiahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "namaHadiah" | "poinDibutuhkan" | "stok" | "foto" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["hadiah"]>
+export type HadiahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "namaHadiah" | "poinDibutuhkan" | "stok" | "foto" | "photoStatus" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["hadiah"]>
 export type HadiahInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   penukaran?: boolean | Prisma.Hadiah$penukaranArgs<ExtArgs>
@@ -939,6 +976,7 @@ export type $HadiahPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     poinDibutuhkan: runtime.Decimal
     stok: number
     foto: string | null
+    photoStatus: $Enums.PhotoStatus
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1376,6 +1414,7 @@ export interface HadiahFieldRefs {
   readonly poinDibutuhkan: Prisma.FieldRef<"Hadiah", 'Decimal'>
   readonly stok: Prisma.FieldRef<"Hadiah", 'Int'>
   readonly foto: Prisma.FieldRef<"Hadiah", 'String'>
+  readonly photoStatus: Prisma.FieldRef<"Hadiah", 'PhotoStatus'>
   readonly createdAt: Prisma.FieldRef<"Hadiah", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Hadiah", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Hadiah", 'DateTime'>

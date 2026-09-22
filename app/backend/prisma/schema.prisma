@@ -38,6 +38,12 @@ enum MediaKind {
   hadiah_foto
 }
 
+enum PhotoStatus {
+  ready
+  processing
+  failed
+}
+
 model User {
   id       String   @id @default(uuid()) @db.Uuid
   tenantId String   @map("tenant_id") @db.Uuid
@@ -89,15 +95,16 @@ model AdminBank {
 }
 
 model Nasabah {
-  id           String    @id @default(uuid()) @db.Uuid
-  tenantId     String    @map("tenant_id") @db.Uuid
-  namaNasabah  String    @map("nama_nasabah") @db.VarChar(100)
+  id           String      @id @default(uuid()) @db.Uuid
+  tenantId     String      @map("tenant_id") @db.Uuid
+  namaNasabah  String      @map("nama_nasabah") @db.VarChar(100)
   alamat       String?
-  telp         String    @db.VarChar(20)
-  saldoPoin    Decimal   @default(0) @map("saldo_poin") @db.Decimal(14, 2)
-  idUser       String    @unique @map("id_user") @db.Uuid
-  foto         String?   @db.VarChar(255)
-  tanggalLahir DateTime? @map("tanggal_lahir") @db.Date
+  telp         String      @db.VarChar(20)
+  saldoPoin    Decimal     @default(0) @map("saldo_poin") @db.Decimal(14, 2)
+  idUser       String      @unique @map("id_user") @db.Uuid
+  foto         String?     @db.VarChar(255)
+  tanggalLahir DateTime?   @map("tanggal_lahir") @db.Date
+  photoStatus  PhotoStatus @default(ready) @map("photo_status")
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
   user   User   @relation(fields: [idUser, tenantId], references: [id, tenantId], onDelete: Restrict)
@@ -126,6 +133,7 @@ model KategoriSampah {
   poinPerKg    Decimal     @map("poin_per_kg") @db.Decimal(14, 2)
   jenis        JenisSampah
   foto         String?     @db.VarChar(255)
+  photoStatus  PhotoStatus @default(ready) @map("photo_status")
 
   tenant      Tenant        @relation(fields: [tenantId], references: [id], onDelete: Restrict)
   detailSetor DetailSetor[]
@@ -208,12 +216,13 @@ model DetailSetor {
 }
 
 model Hadiah {
-  id             String  @id @default(uuid()) @db.Uuid
-  tenantId       String  @map("tenant_id") @db.Uuid
-  namaHadiah     String  @map("nama_hadiah") @db.VarChar(100)
-  poinDibutuhkan Decimal @map("poin_dibutuhkan") @db.Decimal(14, 2)
+  id             String      @id @default(uuid()) @db.Uuid
+  tenantId       String      @map("tenant_id") @db.Uuid
+  namaHadiah     String      @map("nama_hadiah") @db.VarChar(100)
+  poinDibutuhkan Decimal     @map("poin_dibutuhkan") @db.Decimal(14, 2)
   stok           Int
-  foto           String? @db.VarChar(255)
+  foto           String?     @db.VarChar(255)
+  photoStatus    PhotoStatus @default(ready) @map("photo_status")
 
   tenant    Tenant          @relation(fields: [tenantId], references: [id], onDelete: Restrict)
   penukaran PenukaranPoin[]

@@ -8,13 +8,26 @@ import { LoggerService } from '../../infra/logger/logger.service.js';
 import { MediaService } from '../../infra/media/media.service.js';
 import { CloudinaryService } from '../../infra/cloudinary/cloudinary.service.js';
 import {
-  KategoriSampah,
   MediaKind,
-  Tenant,
+  PhotoStatus,
+  Prisma,
 } from '../../../generated/prisma/client.js';
+import { TenantContext } from '../tenant/tenant-select.js';
+import { ConfigService } from '@nestjs/config';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import {
+  MEDIA_UPLOAD_QUEUE,
+  MediaUploadJobData,
+} from '../../infra/queue/media-upload.job.js';
 import { CreateKategoriSampahDto } from './dto/create-kategori.dto.js';
 import { UpdateKategoriSampahDto } from './dto/update-kategori.dto.js';
 import type { UploadedPhoto } from '../../shared/utils/multer-photo.utils.js';
+import {
+  kategoriDetailSelect,
+  kategoriNameTakenSelect,
+} from './kategori-select.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
 
 export type KategoriResponse = {
   id: string;
@@ -23,9 +36,14 @@ export type KategoriResponse = {
   poinPerKg: number;
   jenis: string;
   foto: string | null;
+  photoStatus: PhotoStatus;
 };
 
-function toResponse(k: KategoriSampah): KategoriResponse {
+type KategoriRow = Prisma.KategoriSampahGetPayload<{
+  select: typeof kategoriDetailSelect;
+}>;
+
+function toResponse(k: KategoriRow): KategoriResponse {
   return {
     id: k.id,
     namaKategori: k.namaKategori,
@@ -33,6 +51,7 @@ function toResponse(k: KategoriSampah): KategoriResponse {
     poinPerKg: Number(k.poinPerKg),
     jenis: k.jenis,
     foto: k.foto,
+    photoStatus: k.photoStatus,
   };
 }
 
@@ -45,14 +64,53 @@ export class KategoriService {
     private readonly media: MediaService,
     private readonly cloudinary: CloudinaryService,
     private readonly logger: LoggerService,
+    private readonly redis: RedisService,
+    private readonly config: ConfigService,
+    @InjectQueue(MEDIA_UPLOAD_QUEUE)
+    private readonly photoQueue: Queue<MediaUploadJobData>,
   ) {}
+
+  private photosAsync(): boolean {
+    return this.config.get<boolean>('PHOTO_ASYNC') ?? true;
+  }
+
+  private async enqueueUpload(
+    tenantId: string,
+    ownerId: string,
+    file: UploadedPhoto,
+    deletedBy?: string,
+  ): Promise<void> {
+    await this.photoQueue.add('upload', {
+      tenantId,
+      kind: MediaKind.kategori_foto,
+      ownerId,
+      fileBase64: file.buffer.toString('base64'),
+      mime: file.mimetype,
+      sizeBytes: file.size,
+      folder: this.mediaFolder(tenantId),
+      deletedBy,
+    });
+    this.logger.debug(`enqueued photo upload owner=${ownerId}`, {
+      context: this.context,
+      tenantId,
+    });
+  }
+
+  private listKey(tenantId: string): string {
+    return RedisService.key(tenantId, 'kategori', 'list');
+  }
+
+  private async bustListCache(tenantId: string): Promise<void> {
+    await this.redis.delByPrefix(RedisService.key(tenantId, 'kategori', ''));
+    await this.redis.delByPrefix(RedisService.key(tenantId, 'reports', ''));
+  }
 
   private mediaFolder(tenantId: string): string {
     return `bank-sampah/${tenantId}/kategori`;
   }
 
   async create(
-    tenant: Tenant,
+    tenant: TenantContext,
     dto: CreateKategoriSampahDto,
     file?: UploadedPhoto,
   ): Promise<KategoriResponse> {
@@ -67,6 +125,7 @@ export class KategoriService {
         namaKategori: dto.namaKategori,
         deletedAt: null,
       },
+      select: kategoriNameTakenSelect,
     });
     if (existing) {
       throw new ConflictException(
@@ -74,12 +133,14 @@ export class KategoriService {
       );
     }
 
-    const asset = file
-      ? await this.cloudinary.upload(
-          file.buffer,
-          this.mediaFolder(tenant.id),
-        )
-      : null;
+    const asyncPhotos = file ? this.photosAsync() : false;
+    const asset =
+      file && !asyncPhotos
+        ? await this.cloudinary.upload(
+            file.buffer,
+            this.mediaFolder(tenant.id),
+          )
+        : null;
 
     try {
       const created = await this.prisma.$transaction(async (tx) => {
@@ -91,6 +152,8 @@ export class KategoriService {
             poinPerKg: dto.poinPerKg,
             jenis: dto.jenis,
             foto: asset?.url ?? null,
+            photoStatus:
+              file && asyncPhotos ? PhotoStatus.processing : PhotoStatus.ready,
           },
         });
         if (asset) {
@@ -112,6 +175,10 @@ export class KategoriService {
         context: this.context,
         tenantId: tenant.id,
       });
+      if (file && asyncPhotos) {
+        await this.enqueueUpload(tenant.id, created.id, file);
+      }
+      await this.bustListCache(tenant.id);
       return toResponse(created);
     } catch (error) {
       if (asset) {
@@ -121,21 +188,34 @@ export class KategoriService {
     }
   }
 
-  async findAll(tenant: Tenant): Promise<KategoriResponse[]> {
+  async findAll(tenant: TenantContext): Promise<KategoriResponse[]> {
     this.logger.debug('findAll start', {
       context: this.context,
       tenantId: tenant.id,
     });
+    const key = this.listKey(tenant.id);
+    const cached = await this.redis.get<KategoriResponse[]>(key);
+    if (cached) {
+      this.logger.debug('findAll cache hit', {
+        context: this.context,
+        tenantId: tenant.id,
+      });
+      return cached;
+    }
     const rows = await this.prisma.kategoriSampah.findMany({
       where: { tenantId: tenant.id, deletedAt: null },
       orderBy: { namaKategori: 'asc' },
+      select: kategoriDetailSelect,
     });
-    return rows.map(toResponse);
+    const mapped = rows.map(toResponse);
+    await this.redis.set(key, mapped, 120);
+    return mapped;
   }
 
-  async findOne(tenant: Tenant, id: string): Promise<KategoriResponse> {
+  async findOne(tenant: TenantContext, id: string): Promise<KategoriResponse> {
     const kategori = await this.prisma.kategoriSampah.findFirst({
       where: { id, tenantId: tenant.id, deletedAt: null },
+      select: kategoriDetailSelect,
     });
     if (!kategori) {
       throw new NotFoundException('Waste category not found.');
@@ -144,7 +224,7 @@ export class KategoriService {
   }
 
   async update(
-    tenant: Tenant,
+    tenant: TenantContext,
     id: string,
     dto: UpdateKategoriSampahDto,
     file?: UploadedPhoto,
@@ -157,6 +237,7 @@ export class KategoriService {
 
     const current = await this.prisma.kategoriSampah.findFirst({
       where: { id, tenantId: tenant.id, deletedAt: null },
+      select: kategoriDetailSelect,
     });
     if (!current) {
       throw new NotFoundException('Waste category not found.');
@@ -169,6 +250,7 @@ export class KategoriService {
           namaKategori: dto.namaKategori,
           deletedAt: null,
         },
+        select: kategoriNameTakenSelect,
       });
       if (clash) {
         throw new ConflictException(
@@ -177,12 +259,14 @@ export class KategoriService {
       }
     }
 
-    const asset = file
-      ? await this.cloudinary.upload(
-          file.buffer,
-          this.mediaFolder(tenant.id),
-        )
-      : null;
+    const asyncPhotos = file ? this.photosAsync() : false;
+    const asset =
+      file && !asyncPhotos
+        ? await this.cloudinary.upload(
+            file.buffer,
+            this.mediaFolder(tenant.id),
+          )
+        : null;
 
     try {
       const updated = await this.prisma.$transaction(async (tx) => {
@@ -208,6 +292,13 @@ export class KategoriService {
             poinPerKg: dto.poinPerKg ?? current.poinPerKg,
             jenis: dto.jenis ?? current.jenis,
             foto: asset ? asset.url : current.foto,
+            ...(file
+              ? {
+                  photoStatus: asyncPhotos
+                    ? PhotoStatus.processing
+                    : PhotoStatus.ready,
+                }
+              : {}),
           },
         });
       });
@@ -215,6 +306,10 @@ export class KategoriService {
         context: this.context,
         tenantId: tenant.id,
       });
+      if (file && asyncPhotos) {
+        await this.enqueueUpload(tenant.id, id, file, userId);
+      }
+      await this.bustListCache(tenant.id);
       return toResponse(updated);
     } catch (error) {
       if (asset) {
@@ -225,7 +320,7 @@ export class KategoriService {
   }
 
   async remove(
-    tenant: Tenant,
+    tenant: TenantContext,
     id: string,
     userId?: string,
   ): Promise<{ id: string }> {
@@ -236,6 +331,7 @@ export class KategoriService {
 
     const current = await this.prisma.kategoriSampah.findFirst({
       where: { id, tenantId: tenant.id, deletedAt: null },
+      select: kategoriNameTakenSelect,
     });
     if (!current) {
       throw new NotFoundException('Waste category not found.');
@@ -262,6 +358,7 @@ export class KategoriService {
       context: this.context,
       tenantId: tenant.id,
     });
+    await this.bustListCache(tenant.id);
     return { id };
   }
 

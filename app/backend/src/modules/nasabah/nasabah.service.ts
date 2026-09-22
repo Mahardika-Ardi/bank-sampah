@@ -9,15 +9,28 @@ import { LoggerService } from '../../infra/logger/logger.service.js';
 import { HashingService } from '../../shared/hashing/hashing.service.js';
 import { MediaService } from '../../infra/media/media.service.js';
 import { CloudinaryService } from '../../infra/cloudinary/cloudinary.service.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
 import {
   MediaKind,
-  Nasabah,
-  Tenant,
   UserRole,
-} from '../../../generated/prisma/client.js'; 
+  Prisma,
+  PhotoStatus,
+} from '../../../generated/prisma/client.js';
+import { TenantContext } from '../tenant/tenant-select.js';
+import { ConfigService } from '@nestjs/config';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import {
+  MEDIA_UPLOAD_QUEUE,
+  MediaUploadJobData,
+} from '../../infra/queue/media-upload.job.js'; 
 import { CreateNasabahDto } from './dto/create-nasabah.dto.js';
 import { UpdateNasabahDto } from './dto/update-nasabah.dto.js';
 import type { UploadedPhoto } from '../../shared/utils/multer-photo.utils.js';
+import {
+  nasabahDetailSelect,
+  usernameTakenSelect,
+} from './nasabah-select.js';
 
 export type NasabahResponse = {
   id: string;
@@ -26,13 +39,14 @@ export type NasabahResponse = {
   telp: string;
   saldoPoin: number;
   foto: string | null;
+  photoStatus: PhotoStatus;
   tanggalLahir: string | null;
   user: { username: string; role: string };
 };
 
-type NasabahWithUser = Nasabah & {
-  user: { username: string; role: UserRole };
-};
+type NasabahWithUser = Prisma.NasabahGetPayload<{
+  select: typeof nasabahDetailSelect;
+}>;
 
 function toResponse(n: NasabahWithUser): NasabahResponse {
   return {
@@ -42,6 +56,7 @@ function toResponse(n: NasabahWithUser): NasabahResponse {
     telp: n.telp,
     saldoPoin: Number(n.saldoPoin),
     foto: n.foto,
+    photoStatus: n.photoStatus,
     tanggalLahir: n.tanggalLahir ? n.tanggalLahir.toISOString() : null,
     user: { username: n.user.username, role: n.user.role },
   };
@@ -57,14 +72,48 @@ export class NasabahService {
     private readonly media: MediaService,
     private readonly cloudinary: CloudinaryService,
     private readonly logger: LoggerService,
+    private readonly redis: RedisService,
+    private readonly config: ConfigService,
+    @InjectQueue(MEDIA_UPLOAD_QUEUE)
+    private readonly photoQueue: Queue<MediaUploadJobData>,
   ) {}
+
+  private photosAsync(): boolean {
+    return this.config.get<boolean>('PHOTO_ASYNC') ?? true;
+  }
+
+  private async enqueueUpload(
+    tenantId: string,
+    ownerId: string,
+    file: UploadedPhoto,
+    deletedBy?: string,
+  ): Promise<void> {
+    await this.photoQueue.add('upload', {
+      tenantId,
+      kind: MediaKind.nasabah_foto,
+      ownerId,
+      fileBase64: file.buffer.toString('base64'),
+      mime: file.mimetype,
+      sizeBytes: file.size,
+      folder: this.mediaFolder(tenantId),
+      deletedBy,
+    });
+    this.logger.debug(`enqueued photo upload owner=${ownerId}`, {
+      context: this.context,
+      tenantId,
+    });
+  }
+
+  private async bustReports(tenantId: string): Promise<void> {
+    await this.redis.delByPrefix(RedisService.reportsPrefix(tenantId));
+  }
 
   private mediaFolder(tenantId: string): string {
     return `bank-sampah/${tenantId}/nasabah`;
   }
 
   async create(
-    tenant: Tenant,
+    tenant: TenantContext,
     dto: CreateNasabahDto,
     file?: UploadedPhoto,
   ): Promise<NasabahResponse> {
@@ -75,6 +124,7 @@ export class NasabahService {
 
     const existing = await this.prisma.user.findFirst({
       where: { username: dto.username, tenantId: tenant.id },
+      select: usernameTakenSelect,
     });
     if (existing) {
       throw new ConflictException(
@@ -83,9 +133,11 @@ export class NasabahService {
     }
 
     const hashedPassword = await this.hashing.hash(dto.password);
-    const asset = file
-      ? await this.cloudinary.upload(file.buffer, this.mediaFolder(tenant.id))
-      : null;
+    const asyncPhotos = file ? this.photosAsync() : false;
+    const asset =
+      file && !asyncPhotos
+        ? await this.cloudinary.upload(file.buffer, this.mediaFolder(tenant.id))
+        : null;
 
     try {
       const created = await this.prisma.$transaction(async (tx) => {
@@ -102,6 +154,10 @@ export class NasabahService {
                 telp: dto.telp,
                 saldoPoin: 0,
                 foto: asset?.url ?? null,
+                photoStatus:
+                  file && asyncPhotos
+                    ? PhotoStatus.processing
+                    : PhotoStatus.ready,
               },
             },
           },
@@ -124,17 +180,21 @@ export class NasabahService {
             },
           });
         }
-        const full = await tx.nasabah.findUniqueOrThrow({
-          where: { id: nasabahId },
-          include: { user: { select: { username: true, role: true } } },
-        });
-        return full as NasabahWithUser;
+        return nasabahId;
       });
+      const full = (await this.prisma.nasabah.findUniqueOrThrow({
+        where: { id: created },
+        select: nasabahDetailSelect,
+      })) as NasabahWithUser;
       this.logger.log(`create completed username=${dto.username}`, {
         context: this.context,
         tenantId: tenant.id,
       });
-      return toResponse(created);
+      if (file && asyncPhotos) {
+        await this.enqueueUpload(tenant.id, created, file);
+      }
+      await this.bustReports(tenant.id);
+      return toResponse(full);
     } catch (error) {
       if (asset) {
         await this.compensateUpload(asset.publicId, 'create');
@@ -143,7 +203,7 @@ export class NasabahService {
     }
   }
 
-  async findAll(tenant: Tenant): Promise<NasabahResponse[]> {
+  async findAll(tenant: TenantContext): Promise<NasabahResponse[]> {
     this.logger.debug('findAll start', {
       context: this.context,
       tenantId: tenant.id,
@@ -151,15 +211,15 @@ export class NasabahService {
     const rows = (await this.prisma.nasabah.findMany({
       where: { tenantId: tenant.id, deletedAt: null },
       orderBy: { namaNasabah: 'asc' },
-      include: { user: { select: { username: true, role: true } } },
+      select: nasabahDetailSelect,
     })) as NasabahWithUser[];
     return rows.map(toResponse);
   }
 
-  async findOne(tenant: Tenant, id: string): Promise<NasabahResponse> {
+  async findOne(tenant: TenantContext, id: string): Promise<NasabahResponse> {
     const row = (await this.prisma.nasabah.findFirst({
       where: { id, tenantId: tenant.id, deletedAt: null },
-      include: { user: { select: { username: true, role: true } } },
+      select: nasabahDetailSelect,
     })) as NasabahWithUser | null;
     if (!row) {
       throw new NotFoundException('Customer not found.');
@@ -168,7 +228,7 @@ export class NasabahService {
   }
 
   async update(
-    tenant: Tenant,
+    tenant: TenantContext,
     id: string,
     dto: UpdateNasabahDto,
     file?: UploadedPhoto,
@@ -181,14 +241,17 @@ export class NasabahService {
 
     const current = await this.prisma.nasabah.findFirst({
       where: { id, tenantId: tenant.id, deletedAt: null },
+      select: nasabahDetailSelect,
     });
     if (!current) {
       throw new NotFoundException('Customer not found.');
     }
 
-    const asset = file
-      ? await this.cloudinary.upload(file.buffer, this.mediaFolder(tenant.id))
-      : null;
+    const asyncPhotos = file ? this.photosAsync() : false;
+    const asset =
+      file && !asyncPhotos
+        ? await this.cloudinary.upload(file.buffer, this.mediaFolder(tenant.id))
+        : null;
 
     try {
       const updated = await this.prisma.$transaction(async (tx) => {
@@ -216,8 +279,15 @@ export class NasabahService {
               ? new Date(dto.tanggalLahir)
               : current.tanggalLahir,
             foto: asset ? asset.url : current.foto,
+            ...(file
+              ? {
+                  photoStatus: asyncPhotos
+                    ? PhotoStatus.processing
+                    : PhotoStatus.ready,
+                }
+              : {}),
           },
-          include: { user: { select: { username: true, role: true } } },
+          select: nasabahDetailSelect,
         });
         return row as NasabahWithUser;
       });
@@ -225,6 +295,10 @@ export class NasabahService {
         context: this.context,
         tenantId: tenant.id,
       });
+      if (file && asyncPhotos) {
+        await this.enqueueUpload(tenant.id, id, file, userId);
+      }
+      await this.bustReports(tenant.id);
       return toResponse(updated);
     } catch (error) {
       if (asset) {
@@ -235,7 +309,7 @@ export class NasabahService {
   }
 
   async remove(
-    tenant: Tenant,
+    tenant: TenantContext,
     id: string,
     userId?: string,
   ): Promise<{ id: string }> {
@@ -246,7 +320,7 @@ export class NasabahService {
 
     const current = await this.prisma.nasabah.findFirst({
       where: { id, tenantId: tenant.id, deletedAt: null },
-      include: { user: { select: { id: true } } },
+      select: { id: true, user: { select: { id: true } } },
     });
     if (!current) {
       throw new NotFoundException('Customer not found.');
@@ -277,6 +351,7 @@ export class NasabahService {
       context: this.context,
       tenantId: tenant.id,
     });
+    await this.bustReports(tenant.id);
     return { id };
   }
 

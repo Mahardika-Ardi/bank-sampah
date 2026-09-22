@@ -18,6 +18,7 @@ describe('AuthController', () => {
     registerAdmin: Mock;
     login: Mock;
     getProfile: Mock;
+    refresh: Mock;
   };
 
   const mockConfigService = {
@@ -56,6 +57,7 @@ describe('AuthController', () => {
       registerAdmin: vi.fn(),
       login: vi.fn(),
       getProfile: vi.fn(),
+      refresh: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -169,6 +171,35 @@ describe('AuthController', () => {
       const response = await controller.getProfile(mockRequest as Request);
 
       expect(service.getProfile).toHaveBeenCalledWith('user-1', 'tenant-1');
+      expect(response.data).toEqual(expectedResult);
+    });
+  });
+
+  describe('refresh', () => {
+    it('should rotate the access token from the refresh cookie', async () => {
+      const mockRequest = {
+        tenant: mockTenant,
+        cookies: { refresh_token: 'valid-refresh' },
+      } as Pick<Request, 'tenant' | 'cookies'>;
+      const expectedResult = { id: 'user-1', token: 'jwt-token' };
+      const res = mockRes();
+
+      mockAuthService.refresh.mockResolvedValue(expectedResult);
+
+      const response = await controller.refresh(
+        mockRequest as Request,
+        res as Response,
+      );
+
+      expect(service.refresh).toHaveBeenCalledWith(
+        'valid-refresh',
+        'tenant-1',
+      );
+      expect(res.cookie).toHaveBeenCalledWith(
+        ACCESS_TOKEN_COOKIE,
+        'jwt-token',
+        expect.objectContaining({ httpOnly: true }),
+      );
       expect(response.data).toEqual(expectedResult);
     });
   });

@@ -52,3 +52,12 @@ export const MediaKind = {
 } as const
 
 export type MediaKind = (typeof MediaKind)[keyof typeof MediaKind]
+
+
+export const PhotoStatus = {
+  ready: 'ready',
+  processing: 'processing',
+  failed: 'failed'
+} as const
+
+export type PhotoStatus = (typeof PhotoStatus)[keyof typeof PhotoStatus]

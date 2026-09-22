@@ -44,6 +44,7 @@ export type NasabahMinAggregateOutputType = {
   idUser: string | null
   foto: string | null
   tanggalLahir: Date | null
+  photoStatus: $Enums.PhotoStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -62,6 +63,7 @@ export type NasabahMaxAggregateOutputType = {
   idUser: string | null
   foto: string | null
   tanggalLahir: Date | null
+  photoStatus: $Enums.PhotoStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -80,6 +82,7 @@ export type NasabahCountAggregateOutputType = {
   idUser: number
   foto: number
   tanggalLahir: number
+  photoStatus: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -108,6 +111,7 @@ export type NasabahMinAggregateInputType = {
   idUser?: true
   foto?: true
   tanggalLahir?: true
+  photoStatus?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -126,6 +130,7 @@ export type NasabahMaxAggregateInputType = {
   idUser?: true
   foto?: true
   tanggalLahir?: true
+  photoStatus?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -144,6 +149,7 @@ export type NasabahCountAggregateInputType = {
   idUser?: true
   foto?: true
   tanggalLahir?: true
+  photoStatus?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -249,6 +255,7 @@ export type NasabahGroupByOutputType = {
   idUser: string
   foto: string | null
   tanggalLahir: Date | null
+  photoStatus: $Enums.PhotoStatus
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -290,6 +297,7 @@ export type NasabahWhereInput = {
   idUser?: Prisma.UuidFilter<"Nasabah"> | string
   foto?: Prisma.StringNullableFilter<"Nasabah"> | string | null
   tanggalLahir?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFilter<"Nasabah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
@@ -312,6 +320,7 @@ export type NasabahOrderByWithRelationInput = {
   idUser?: Prisma.SortOrder
   foto?: Prisma.SortOrderInput | Prisma.SortOrder
   tanggalLahir?: Prisma.SortOrderInput | Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -339,6 +348,7 @@ export type NasabahWhereUniqueInput = Prisma.AtLeast<{
   saldoPoin?: Prisma.DecimalFilter<"Nasabah"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.StringNullableFilter<"Nasabah"> | string | null
   tanggalLahir?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFilter<"Nasabah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
@@ -361,6 +371,7 @@ export type NasabahOrderByWithAggregationInput = {
   idUser?: Prisma.SortOrder
   foto?: Prisma.SortOrderInput | Prisma.SortOrder
   tanggalLahir?: Prisma.SortOrderInput | Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -387,6 +398,7 @@ export type NasabahScalarWhereWithAggregatesInput = {
   idUser?: Prisma.UuidWithAggregatesFilter<"Nasabah"> | string
   foto?: Prisma.StringNullableWithAggregatesFilter<"Nasabah"> | string | null
   tanggalLahir?: Prisma.DateTimeNullableWithAggregatesFilter<"Nasabah"> | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusWithAggregatesFilter<"Nasabah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Nasabah"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Nasabah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Nasabah"> | Date | string | null
@@ -403,6 +415,7 @@ export type NasabahCreateInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -425,6 +438,7 @@ export type NasabahUncheckedCreateInput = {
   idUser: string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -443,6 +457,7 @@ export type NasabahUpdateInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -465,6 +480,7 @@ export type NasabahUncheckedUpdateInput = {
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -485,6 +501,7 @@ export type NasabahCreateManyInput = {
   idUser: string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -501,6 +518,7 @@ export type NasabahUpdateManyMutationInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -519,6 +537,7 @@ export type NasabahUncheckedUpdateManyInput = {
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -552,6 +571,7 @@ export type NasabahCountOrderByAggregateInput = {
   idUser?: Prisma.SortOrder
   foto?: Prisma.SortOrder
   tanggalLahir?: Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -574,6 +594,7 @@ export type NasabahMaxOrderByAggregateInput = {
   idUser?: Prisma.SortOrder
   foto?: Prisma.SortOrder
   tanggalLahir?: Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -592,6 +613,7 @@ export type NasabahMinOrderByAggregateInput = {
   idUser?: Prisma.SortOrder
   foto?: Prisma.SortOrder
   tanggalLahir?: Prisma.SortOrder
+  photoStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -657,6 +679,10 @@ export type DecimalFieldUpdateOperationsInput = {
   decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
   multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type EnumPhotoStatusFieldUpdateOperationsInput = {
+  set?: $Enums.PhotoStatus
 }
 
 export type NasabahCreateNestedOneWithoutSetoranInput = {
@@ -737,6 +763,7 @@ export type NasabahCreateWithoutUserInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -756,6 +783,7 @@ export type NasabahUncheckedCreateWithoutUserInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -790,6 +818,7 @@ export type NasabahUpdateWithoutUserInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -809,6 +838,7 @@ export type NasabahUncheckedUpdateWithoutUserInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -827,6 +857,7 @@ export type NasabahCreateWithoutSetoranInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -848,6 +879,7 @@ export type NasabahUncheckedCreateWithoutSetoranInput = {
   idUser: string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -881,6 +913,7 @@ export type NasabahUpdateWithoutSetoranInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -902,6 +935,7 @@ export type NasabahUncheckedUpdateWithoutSetoranInput = {
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -919,6 +953,7 @@ export type NasabahCreateWithoutPenukaranInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -940,6 +975,7 @@ export type NasabahUncheckedCreateWithoutPenukaranInput = {
   idUser: string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -973,6 +1009,7 @@ export type NasabahUpdateWithoutPenukaranInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -994,6 +1031,7 @@ export type NasabahUncheckedUpdateWithoutPenukaranInput = {
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1011,6 +1049,7 @@ export type NasabahCreateWithoutTenantInput = {
   saldoPoin?: runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1031,6 +1070,7 @@ export type NasabahUncheckedCreateWithoutTenantInput = {
   idUser: string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1080,6 +1120,7 @@ export type NasabahScalarWhereInput = {
   idUser?: Prisma.UuidFilter<"Nasabah"> | string
   foto?: Prisma.StringNullableFilter<"Nasabah"> | string | null
   tanggalLahir?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFilter<"Nasabah"> | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Nasabah"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Nasabah"> | Date | string | null
@@ -1097,6 +1138,7 @@ export type NasabahCreateManyTenantInput = {
   idUser: string
   foto?: string | null
   tanggalLahir?: Date | string | null
+  photoStatus?: $Enums.PhotoStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1113,6 +1155,7 @@ export type NasabahUpdateWithoutTenantInput = {
   saldoPoin?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1133,6 +1176,7 @@ export type NasabahUncheckedUpdateWithoutTenantInput = {
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1152,6 +1196,7 @@ export type NasabahUncheckedUpdateManyWithoutTenantInput = {
   idUser?: Prisma.StringFieldUpdateOperationsInput | string
   foto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tanggalLahir?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  photoStatus?: Prisma.EnumPhotoStatusFieldUpdateOperationsInput | $Enums.PhotoStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1210,6 +1255,7 @@ export type NasabahSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   idUser?: boolean
   foto?: boolean
   tanggalLahir?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1233,6 +1279,7 @@ export type NasabahSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   idUser?: boolean
   foto?: boolean
   tanggalLahir?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1253,6 +1300,7 @@ export type NasabahSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   idUser?: boolean
   foto?: boolean
   tanggalLahir?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1273,6 +1321,7 @@ export type NasabahSelectScalar = {
   idUser?: boolean
   foto?: boolean
   tanggalLahir?: boolean
+  photoStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1281,7 +1330,7 @@ export type NasabahSelectScalar = {
   restoredBy?: boolean
 }
 
-export type NasabahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "namaNasabah" | "alamat" | "telp" | "saldoPoin" | "idUser" | "foto" | "tanggalLahir" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["nasabah"]>
+export type NasabahOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "namaNasabah" | "alamat" | "telp" | "saldoPoin" | "idUser" | "foto" | "tanggalLahir" | "photoStatus" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy" | "restoredAt" | "restoredBy", ExtArgs["result"]["nasabah"]>
 export type NasabahInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1316,6 +1365,7 @@ export type $NasabahPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     idUser: string
     foto: string | null
     tanggalLahir: Date | null
+    photoStatus: $Enums.PhotoStatus
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1758,6 +1808,7 @@ export interface NasabahFieldRefs {
   readonly idUser: Prisma.FieldRef<"Nasabah", 'String'>
   readonly foto: Prisma.FieldRef<"Nasabah", 'String'>
   readonly tanggalLahir: Prisma.FieldRef<"Nasabah", 'DateTime'>
+  readonly photoStatus: Prisma.FieldRef<"Nasabah", 'PhotoStatus'>
   readonly createdAt: Prisma.FieldRef<"Nasabah", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Nasabah", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Nasabah", 'DateTime'>

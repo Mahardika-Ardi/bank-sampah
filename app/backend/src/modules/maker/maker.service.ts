@@ -8,10 +8,17 @@ import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { HashingService } from '../../shared/hashing/hashing.service.js';
-import { Tenant, UserRole } from '../../../generated/prisma/client.js';
+import { TenantContext } from '../tenant/tenant-select.js';
+import { UserRole } from '../../../generated/prisma/client.js';
 import { RegisterAppMakerDto } from './dto/register-maker.dto.js';
 import { LoginMakerDto } from './dto/login-maker.dto.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
+import {
+  makerLookupSelect,
+  makerEmailTakenSelect,
+  makerLoginSelect,
+} from './maker-select.js';
+import { tenantPublicSelect } from '../tenant/tenant-select.js';
 
 @Injectable()
 export class MakerService {
@@ -30,6 +37,7 @@ export class MakerService {
     });
     const existingMaker = await this.prisma.user.findFirst({
       where: { username: dto.email },
+      select: makerEmailTakenSelect,
     });
 
     if (existingMaker) {
@@ -102,6 +110,7 @@ export class MakerService {
     });
     const user = await this.prisma.user.findFirst({
       where: { username: dto.email },
+      select: makerLoginSelect,
     });
 
     if (!user) {
@@ -118,6 +127,7 @@ export class MakerService {
 
     const tenant = await this.prisma.tenant.findUnique({
       where: { id: user.tenantId },
+      select: { name: true, appKey: true },
     });
 
     const payload = {
@@ -140,7 +150,7 @@ export class MakerService {
     };
   }
 
-  async getProfile(tenant: Tenant) {
+  async getProfile(tenant: TenantContext) {
     this.logger.debug(`getProfile start tenantId=${tenant.id}`, {
       context: this.context,
     });
@@ -190,7 +200,7 @@ export class MakerService {
     const user = await this.prisma.user.findFirst({
       where: { username: email, role: UserRole.admin_bank, deletedAt: null },
       orderBy: { createdAt: 'asc' },
-      include: { tenant: true, adminBank: true },
+      select: makerLookupSelect,
     });
 
     if (!user) {
@@ -208,5 +218,23 @@ export class MakerService {
       namaApp: user.tenant.appName ?? user.tenant.name,
       appKey: user.tenant.appKey,
     };
+  }
+
+  async listBanks() {
+    this.logger.debug('listBanks start', { context: this.context });
+    const tenants = await this.prisma.tenant.findMany({
+      where: { deletedAt: null, isActive: true },
+      orderBy: { appName: 'asc' },
+      select: tenantPublicSelect,
+    });
+
+    this.logger.log(`listBanks completed count=${tenants.length}`, {
+      context: this.context,
+    });
+    return tenants.map((tenant) => ({
+      id: tenant.id,
+      namaApp: tenant.appName ?? tenant.name,
+      appKey: tenant.appKey,
+    }));
   }
 }

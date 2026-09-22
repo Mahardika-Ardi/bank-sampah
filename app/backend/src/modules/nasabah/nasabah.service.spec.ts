@@ -2,19 +2,29 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { NasabahService } from './nasabah.service.js';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
 import { HashingService } from '../../shared/hashing/hashing.service.js';
 import { MediaService } from '../../infra/media/media.service.js';
 import { CloudinaryService } from '../../infra/cloudinary/cloudinary.service.js';
 import { NotFoundException, ConflictException } from '@nestjs/common';
 import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { Tenant } from '../../../generated/prisma/client.js';
+import { ConfigService } from '@nestjs/config';
+import { getQueueToken } from '@nestjs/bullmq';
+import { MEDIA_UPLOAD_QUEUE } from '../../infra/queue/media-upload.job.js';
 
 describe('NasabahService', () => {
   let service: NasabahService;
 
   let mockPrisma: {
     user: { findFirst: Mock };
-    nasabah: { findFirst: Mock; findMany: Mock; create: Mock; update: Mock };
+    nasabah: {
+      findFirst: Mock;
+      findMany: Mock;
+      create: Mock;
+      update: Mock;
+      findUniqueOrThrow: Mock;
+    };
     $transaction: Mock;
   };
   let mockMedia: {
@@ -23,6 +33,8 @@ describe('NasabahService', () => {
     retirePhotosForOwner: Mock;
   };
   let mockCloudinary: { upload: Mock; destroy: Mock };
+  let mockConfig: { get: Mock };
+  let mockQueue: { add: Mock };
 
   const mockTenant = { id: 'tenant-id' } as Tenant;
 
@@ -34,6 +46,7 @@ describe('NasabahService', () => {
     telp: '081987654321',
     saldoPoin: '0',
     foto: null,
+    photoStatus: 'ready',
     tanggalLahir: null,
     user: { username: 'nasabah_dewi', role: 'nasabah' },
   };
@@ -46,6 +59,18 @@ describe('NasabahService', () => {
         findMany: vi.fn().mockResolvedValue([]),
         create: vi.fn(),
         update: vi.fn(),
+        findUniqueOrThrow: vi.fn().mockResolvedValue({
+          id: 'nas-id',
+          tenantId: 'tenant-id',
+          namaNasabah: 'Dewi Lestari',
+          alamat: 'Jl. Kenanga No. 5',
+          telp: '081987654321',
+          saldoPoin: '0',
+          foto: null,
+          photoStatus: 'ready',
+          tanggalLahir: null,
+          user: { username: 'nasabah_dewi', role: 'nasabah' },
+        }),
       },
       $transaction: vi.fn(async (callback) =>
         callback({
@@ -69,6 +94,8 @@ describe('NasabahService', () => {
       retirePhotosForOwner: vi.fn().mockResolvedValue([]),
     };
     mockCloudinary = { upload: vi.fn(), destroy: vi.fn() };
+    mockConfig = { get: vi.fn().mockReturnValue(false) };
+    mockQueue = { add: vi.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -78,6 +105,12 @@ describe('NasabahService', () => {
         { provide: MediaService, useValue: mockMedia },
         { provide: CloudinaryService, useValue: mockCloudinary },
         { provide: LoggerService, useValue: { log: vi.fn(), debug: vi.fn() } },
+        { provide: ConfigService, useValue: mockConfig },
+        { provide: getQueueToken(MEDIA_UPLOAD_QUEUE), useValue: mockQueue },
+        {
+          provide: RedisService,
+          useValue: { get: vi.fn(), set: vi.fn(), delByPrefix: vi.fn() },
+        },
       ],
     }).compile();
 
@@ -145,6 +178,30 @@ describe('NasabahService', () => {
       };
       expect(createArg.data.tenantId).toBe('tenant-id');
       expect(createArg.data.nasabah.create).not.toHaveProperty('tenantId');
+    });
+
+    it('should enqueue upload and mark processing when PHOTO_ASYNC is on', async () => {
+      mockConfig.get.mockReturnValue(true);
+      mockPrisma.user.findFirst.mockResolvedValue(null);
+      mockPrisma.nasabah.findUniqueOrThrow.mockResolvedValueOnce({
+        ...nasabahRow,
+        foto: null,
+        photoStatus: 'processing',
+      });
+      const file = {
+        buffer: Buffer.from('img'),
+        mimetype: 'image/jpeg',
+        size: 100,
+      } as Express.Multer.File;
+
+      const result = await service.create(mockTenant, dto, file);
+
+      expect(mockQueue.add).toHaveBeenCalledWith(
+        'upload',
+        expect.objectContaining({ ownerId: 'nas-id' }),
+      );
+      expect(mockCloudinary.upload).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ foto: null, photoStatus: 'processing' });
     });
   });
 

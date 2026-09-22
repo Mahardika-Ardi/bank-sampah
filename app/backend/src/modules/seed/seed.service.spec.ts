@@ -3,6 +3,7 @@ import { SeedService } from './seed.service.js';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { HashingService } from '../../shared/hashing/hashing.service.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
 import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { BadRequestException } from '@nestjs/common';
 import { Tenant } from '../../../generated/prisma/client.js';
@@ -77,6 +78,10 @@ describe('SeedService', () => {
         {
           provide: LoggerService,
           useValue: { log: vi.fn(), debug: vi.fn() },
+        },
+        {
+          provide: RedisService,
+          useValue: { get: vi.fn(), set: vi.fn(), delByPrefix: vi.fn() },
         },
       ],
     }).compile();

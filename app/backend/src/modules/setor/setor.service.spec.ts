@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SetorService } from './setor.service.js';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
 import {
   BadRequestException,
   ForbiddenException,
@@ -78,6 +79,14 @@ describe('SetorService', () => {
         {
           provide: LoggerService,
           useValue: { log: vi.fn(), debug: vi.fn() },
+        },
+        {
+          provide: RedisService,
+          useValue: { get: vi.fn(), set: vi.fn(), delByPrefix: vi.fn() },
+        },
+        {
+          provide: RedisService,
+          useValue: { get: vi.fn(), set: vi.fn(), delByPrefix: vi.fn() },
         },
       ],
     }).compile();

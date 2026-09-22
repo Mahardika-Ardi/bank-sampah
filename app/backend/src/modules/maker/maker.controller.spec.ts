@@ -17,6 +17,7 @@ describe('MakerController', () => {
     loginMaker: Mock;
     getProfile: Mock;
     checkKey: Mock;
+    listBanks: Mock;
   };
 
   const mockConfigService = {
@@ -55,6 +56,7 @@ describe('MakerController', () => {
       loginMaker: vi.fn(),
       getProfile: vi.fn(),
       checkKey: vi.fn(),
+      listBanks: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -152,6 +154,27 @@ describe('MakerController', () => {
 
       expect(service.checkKey).toHaveBeenCalledWith('siswa1@smk.sch.id');
       expect(result).toEqual({ message: 'App Key found', data: keyData });
+    });
+  });
+
+  describe('listBanks', () => {
+    it('should return the public bank list', async () => {
+      const banks = [
+        {
+          id: 'tenant-id',
+          namaApp: 'Bank Sampah Digital Hub',
+          appKey: 'app-key',
+        },
+      ];
+      mockMakerService.listBanks.mockResolvedValue(banks);
+
+      const result = await controller.listBanks();
+
+      expect(service.listBanks).toHaveBeenCalledOnce();
+      expect(result).toEqual({
+        message: 'Active waste banks retrieved successfully',
+        data: banks,
+      });
     });
   });
 });

@@ -14,7 +14,7 @@ import { ConfigService } from '@nestjs/config';
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { UnauthorizedException } from '@nestjs/common';
 import { APP_KEY_HEADER } from '../../shared/constants/tenant.constants.js';
-import { setAccessTokenCookie } from '../../shared/utils/cookie.utils.js';
+import { setAccessTokenCookie, setRefreshTokenCookie, refreshCookieName } from '../../shared/utils/cookie.utils.js';
 import {
   AUTH_NASABAH_REGISTER_RESPONSE,
   AUTH_ADMIN_REGISTER_RESPONSE,
@@ -103,9 +103,36 @@ export class AuthController {
   ) {
     const tenant = this.requireTenant(req);
     const data = await this.authService.login(tenant, dto);
+    const { refreshToken, ...body } = data;
+    setAccessTokenCookie(this.config, res, body.token);
+    setRefreshTokenCookie(this.config, res, refreshToken);
+    return {
+      message: `Login ${body.role} successful`,
+      data: body,
+    };
+  }
+
+  @Post('auth/refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiHeader({ name: APP_KEY_HEADER, required: true, description: 'Tenant App Key' })
+  @ApiOperation({ summary: 'Rotate access token using the refresh cookie' })
+  @ApiResponse({ status: 200, description: 'Token refreshed successfully' })
+  @ApiResponse({ status: 401, description: 'Invalid or expired refresh token' })
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const tenant = this.requireTenant(req);
+    const refreshToken = req.cookies?.[
+      refreshCookieName(this.config)
+    ] as string | undefined;
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token is missing.');
+    }
+    const data = await this.authService.refresh(refreshToken, tenant.id);
     setAccessTokenCookie(this.config, res, data.token);
     return {
-      message: `Login ${data.role} successful`,
+      message: 'Token refreshed successfully',
       data,
     };
   }

@@ -1,5 +1,8 @@
 import type { JwtPayload } from './jwt-payload.type.js';
-import type { Tenant } from '../../../generated/prisma/client.js';
+// Type-only exception to the shared-never-imports-feature rule: ambient
+// augmentation must name the concrete request-tenant type. Erased at
+// runtime, so no dependency edge is created.
+import type { TenantContext } from '../../modules/tenant/tenant-select.js';
 
 declare global {
   namespace Express {
@@ -9,7 +12,7 @@ declare global {
     interface User extends JwtPayload {}
     interface Request {
       /** Resolved by TenantMiddleware for all non-public routes. */
-      tenant?: Tenant;
+      tenant?: TenantContext;
     }
   }
 }

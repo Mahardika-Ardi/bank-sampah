@@ -4,11 +4,13 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
 import {
   StatusSetor,
-  Tenant,
+  StatusPenukaran,
   JenisSampah,
 } from '../../../generated/prisma/client.js';
+import { TenantContext } from '../tenant/tenant-select.js';
 import {
   DateRange,
   monthRange,
@@ -16,6 +18,14 @@ import {
   weekRange,
   yearRange,
 } from '../../shared/utils/date-range.utils.js';
+import {
+  reportBalanceSelect,
+  reportDetailSelect,
+  reportSetorRowSelect,
+  reportSetorSumSelect,
+  reportTukarRowSelect,
+  reportTukarSumSelect,
+} from './reports-select.js';
 
 const round2 = (n: number): number => Math.round(n * 100) / 100;
 const round6 = (n: number): number => Math.round(n * 1_000_000) / 1_000_000;
@@ -27,6 +37,52 @@ const JENIS_LIST: JenisSampah[] = [
   JenisSampah.kaca,
 ];
 
+type RekapBody = {
+  rekapitulasiTonase: {
+    totalKg: number;
+    totalTon: number;
+    totalEstimasiPembayaranRupiah: number;
+    totalPoinDiterbitkan: number;
+  };
+  breakdownJenisSampah: Record<
+    string,
+    { tonaseKg: number; rupiah: number; poin: number }
+  >;
+  rekapitulasiPenukaranPoin: {
+    totalTransaksiPenukaran: number;
+    totalPoinTerpakai: number;
+  };
+};
+
+type SummaryBody = {
+  totalSampahDisetorKg: number;
+  totalPoinDidapat: number;
+  totalPoinDitukar: number;
+  transaksiTerakhirSetor: {
+    kodeSetor: string;
+    tanggal: Date;
+    beratKg: number;
+    poin: number;
+    status: StatusSetor;
+  } | null;
+  transaksiTerakhirTukar: {
+    kodePenukaran: string;
+    tanggal: Date;
+    hadiah: string;
+    poin: number;
+    status: StatusPenukaran;
+  } | null;
+};
+
+type StatsBody = {
+  totalNasabah: number;
+  totalKategoriSampah: number;
+  totalTransaksiSetor: number;
+  totalHadiah: number;
+  totalBeratSampahKg: number;
+  totalPoinTersalurkan: number;
+};
+
 @Injectable()
 export class ReportsService {
   private readonly context = ReportsService.name;
@@ -34,11 +90,13 @@ export class ReportsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly logger: LoggerService,
+    private readonly redis: RedisService,
   ) {}
 
   private async resolveNasabah(tenantId: string, userId: string) {
     const nasabah = await this.prisma.nasabah.findFirst({
       where: { idUser: userId, tenantId, deletedAt: null },
+      select: reportBalanceSelect,
     });
     if (!nasabah) {
       throw new ForbiddenException(
@@ -48,54 +106,81 @@ export class ReportsService {
     return nasabah;
   }
 
-  async rekapBulanan(tenant: Tenant, bulan: string) {
+  async rekapBulanan(tenant: TenantContext, bulan: string) {
     this.logger.debug(`rekapBulanan start bulan=${bulan}`, {
       context: this.context,
       tenantId: tenant.id,
     });
+    const key = RedisService.key(tenant.id, 'reports', `rekap:bulanan:${bulan}`);
+    const cached = await this.redis.get<RekapBody>(key);
+    if (cached) return { periode: bulan, ...cached };
     const body = await this.rekapitulasi(tenant.id, monthRange(bulan));
     this.logger.log(`rekapBulanan completed bulan=${bulan}`, {
       context: this.context,
       tenantId: tenant.id,
     });
+    await this.redis.set(key, body, 120);
     return { periode: bulan, ...body };
   }
 
-  async rekapMingguan(tenant: Tenant, tanggal: string) {
+  async rekapMingguan(tenant: TenantContext, tanggal: string) {
     this.logger.debug(`rekapMingguan start tanggal=${tanggal}`, {
       context: this.context,
       tenantId: tenant.id,
     });
+    const key = RedisService.key(
+      tenant.id,
+      'reports',
+      `rekap:mingguan:${tanggal.slice(0, 10)}`,
+    );
+    const cached = await this.redis.get<RekapBody>(key);
     const range = weekRange(tanggal);
-    const body = await this.rekapitulasi(tenant.id, range);
     const { week } = weekNumber(tanggal);
     const iso = (d: Date): string => d.toISOString().slice(0, 10);
+    const periode = {
+      jenis: 'mingguan',
+      mingguKe: week,
+      awal: iso(range.gte),
+      akhir: iso(new Date(range.lt.getTime() - 1)),
+    };
+    if (cached) {
+      this.logger.debug('rekapMingguan cache hit', {
+        context: this.context,
+        tenantId: tenant.id,
+      });
+      return { periode, ...cached };
+    }
+    const body = await this.rekapitulasi(tenant.id, range);
     this.logger.log(`rekapMingguan completed tanggal=${tanggal}`, {
       context: this.context,
       tenantId: tenant.id,
     });
-    return {
-      periode: {
-        jenis: 'mingguan',
-        mingguKe: week,
-        awal: iso(range.gte),
-        akhir: iso(new Date(range.lt.getTime() - 1)),
-      },
-      ...body,
-    };
+    await this.redis.set(key, body, 120);
+    return { periode, ...body };
   }
 
-  async rekapTahunan(tenant: Tenant, tahun: number) {
+  async rekapTahunan(tenant: TenantContext, tahun: number) {
     this.logger.debug(`rekapTahunan start tahun=${tahun}`, {
       context: this.context,
       tenantId: tenant.id,
     });
+    const key = RedisService.key(tenant.id, 'reports', `rekap:tahunan:${tahun}`);
+    const cached = await this.redis.get<RekapBody>(key);
+    const periode = { jenis: 'tahunan', tahun };
+    if (cached) {
+      this.logger.debug('rekapTahunan cache hit', {
+        context: this.context,
+        tenantId: tenant.id,
+      });
+      return { periode, ...cached };
+    }
     const body = await this.rekapitulasi(tenant.id, yearRange(tahun));
     this.logger.log(`rekapTahunan completed tahun=${tahun}`, {
       context: this.context,
       tenantId: tenant.id,
     });
-    return { periode: { jenis: 'tahunan', tahun }, ...body };
+    await this.redis.set(key, body, 120);
+    return { periode, ...body };
   }
 
   private async rekapitulasi(tenantId: string, range: DateRange) {
@@ -111,7 +196,7 @@ export class ReportsService {
           deletedAt: null,
         },
       },
-      include: { kategori: true },
+      select: reportDetailSelect,
     });
 
     const breakdown: Record<string, { tonaseKg: number; rupiah: number; poin: number }> = {};
@@ -137,6 +222,7 @@ export class ReportsService {
 
     const penukaran = await this.prisma.penukaranPoin.findMany({
       where: { tenantId, tanggal: { gte, lt }, deletedAt: null },
+      select: reportTukarSumSelect,
     });
     const totalPoinTerpakai = round2(
       penukaran.reduce((s, p) => s + Number(p.poinTerpakai), 0),
@@ -158,11 +244,27 @@ export class ReportsService {
   }
 
   async dashboardSummary(
-    tenant: Tenant,
+    tenant: TenantContext,
     userId: string,
     range?: DateRange,
   ) {
     const nasabah = await this.resolveNasabah(tenant.id, userId);
+    const windowLabel = range
+      ? `${range.gte.toISOString()}_${range.lt.toISOString()}`
+      : 'all';
+    const key = RedisService.key(
+      tenant.id,
+      'reports',
+      `summary:${nasabah.id}:${windowLabel}`,
+    );
+    const cached = await this.redis.get<SummaryBody>(key);
+    if (cached) {
+      this.logger.debug('dashboardSummary cache hit', {
+        context: this.context,
+        tenantId: tenant.id,
+      });
+      return { ...cached, saldoPoinSaatIni: Number(nasabah.saldoPoin) };
+    }
 
     const setors = await this.prisma.setorSampah.findMany({
       where: {
@@ -173,6 +275,7 @@ export class ReportsService {
         ...(range ? { tanggal: { gte: range.gte, lt: range.lt } } : {}),
       },
       orderBy: { tanggal: 'desc' },
+      select: reportSetorRowSelect,
     });
     const tukars = await this.prisma.penukaranPoin.findMany({
       where: {
@@ -182,7 +285,7 @@ export class ReportsService {
         ...(range ? { tanggal: { gte: range.gte, lt: range.lt } } : {}),
       },
       orderBy: { tanggal: 'desc' },
-      include: { hadiah: true },
+      select: reportTukarRowSelect,
     });
 
     const totalSampahDisetorKg = round2(
@@ -197,8 +300,7 @@ export class ReportsService {
     const lastSetor = setors[0];
     const lastTukar = tukars[0];
 
-    return {
-      saldoPoinSaatIni: Number(nasabah.saldoPoin),
+    const body: SummaryBody = {
       totalSampahDisetorKg,
       totalPoinDidapat,
       totalPoinDitukar,
@@ -221,13 +323,32 @@ export class ReportsService {
           }
         : null,
     };
+    await this.redis.set(key, body, 30);
+    // Balance is always live — never served stale.
+    return { ...body, saldoPoinSaatIni: Number(nasabah.saldoPoin) };
   }
 
-  async dashboardStats(tenant: Tenant, range?: DateRange) {
+  async dashboardStats(tenant: TenantContext, range?: DateRange) {
     this.logger.debug('dashboardStats start', {
       context: this.context,
       tenantId: tenant.id,
     });
+    const windowLabel = range
+      ? `${range.gte.toISOString()}_${range.lt.toISOString()}`
+      : 'all';
+    const key = RedisService.key(
+      tenant.id,
+      'reports',
+      `stats:${windowLabel}`,
+    );
+    const cached = await this.redis.get<StatsBody>(key);
+    if (cached) {
+      this.logger.debug('dashboardStats cache hit', {
+        context: this.context,
+        tenantId: tenant.id,
+      });
+      return cached;
+    }
     const rangeFilter = range
       ? { tanggal: { gte: range.gte, lt: range.lt } }
       : {};
@@ -257,6 +378,7 @@ export class ReportsService {
           deletedAt: null,
           ...rangeFilter,
         },
+        select: reportSetorSumSelect,
       }),
     ]);
 
@@ -266,7 +388,7 @@ export class ReportsService {
     const totalPoinTersalurkan = round2(
       completed.reduce((s, x) => s + Number(x.totalPoin), 0),
     );
-    return {
+    const body: StatsBody = {
       totalNasabah,
       totalKategoriSampah,
       totalTransaksiSetor,
@@ -274,5 +396,7 @@ export class ReportsService {
       totalBeratSampahKg,
       totalPoinTersalurkan,
     };
+    await this.redis.set(key, body, 60);
+    return body;
   }
 }

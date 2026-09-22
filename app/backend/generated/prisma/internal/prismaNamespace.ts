@@ -1250,6 +1250,7 @@ export const NasabahScalarFieldEnum = {
   idUser: 'idUser',
   foto: 'foto',
   tanggalLahir: 'tanggalLahir',
+  photoStatus: 'photoStatus',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
@@ -1269,6 +1270,7 @@ export const KategoriSampahScalarFieldEnum = {
   poinPerKg: 'poinPerKg',
   jenis: 'jenis',
   foto: 'foto',
+  photoStatus: 'photoStatus',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
@@ -1332,6 +1334,7 @@ export const HadiahScalarFieldEnum = {
   poinDibutuhkan: 'poinDibutuhkan',
   stok: 'stok',
   foto: 'foto',
+  photoStatus: 'photoStatus',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
@@ -1487,6 +1490,20 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PhotoStatus'
+ */
+export type EnumPhotoStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PhotoStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PhotoStatus[]'
+ */
+export type ListEnumPhotoStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PhotoStatus[]'>
     
 
 

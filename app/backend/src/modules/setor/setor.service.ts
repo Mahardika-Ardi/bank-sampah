@@ -6,16 +6,27 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
 import {
   StatusSetor,
-  Tenant,
   UserRole,
   Prisma,
 } from '../../../generated/prisma/client.js';
+import { TenantContext } from '../tenant/tenant-select.js';
 import {
   CreateSetorSampahDto,
   VerifySetorSampahDto,
 } from './dto/setor.dto.js';
+import {
+  setorAdminListSelect,
+  setorAdminRefSelect,
+  setorHistorySelect,
+  setorKodeSelect,
+  setorOwnerSelect,
+  setorRateSelect,
+  setorReceiptSelect,
+  setorVerifySelect,
+} from './setor-select.js';
 
 const round2 = (n: number): number => Math.round(n * 100) / 100;
 const round3 = (n: number): number => Math.round(n * 1000) / 1000;
@@ -34,11 +45,17 @@ export class SetorService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly logger: LoggerService,
+    private readonly redis: RedisService,
   ) {}
+
+  private async bustReports(tenantId: string): Promise<void> {
+    await this.redis.delByPrefix(RedisService.reportsPrefix(tenantId));
+  }
 
   private async resolveNasabah(tenantId: string, userId: string) {
     const nasabah = await this.prisma.nasabah.findFirst({
       where: { idUser: userId, tenantId, deletedAt: null },
+      select: setorOwnerSelect,
     });
     if (!nasabah) {
       throw new ForbiddenException(
@@ -51,6 +68,7 @@ export class SetorService {
   private async resolveAdmin(tenantId: string, userId: string) {
     const admin = await this.prisma.adminBank.findFirst({
       where: { idUser: userId, tenantId, deletedAt: null },
+      select: setorAdminRefSelect,
     });
     if (!admin) {
       throw new ForbiddenException('This account is not a waste bank admin.');
@@ -69,6 +87,7 @@ export class SetorService {
     const latest = await tx.setorSampah.findFirst({
       where: { tenantId, kodeSetor: { startsWith: prefix } },
       orderBy: { kodeSetor: 'desc' },
+      select: setorKodeSelect,
     });
     const seq = latest
       ? Number.parseInt(latest.kodeSetor.slice(prefix.length), 10) + 1
@@ -76,7 +95,7 @@ export class SetorService {
     return `${prefix}${String(seq).padStart(4, '0')}`;
   }
 
-  async submit(tenant: Tenant, userId: string, dto: CreateSetorSampahDto) {
+  async submit(tenant: TenantContext, userId: string, dto: CreateSetorSampahDto) {
     this.logger.debug(`submit start items=${dto.items.length}`, {
       context: this.context,
       tenantId: tenant.id,
@@ -88,6 +107,7 @@ export class SetorService {
     const kategoriIds = [...new Set(dto.items.map((i) => i.kategoriSampahId))];
     const kategoris = await this.prisma.kategoriSampah.findMany({
       where: { id: { in: kategoriIds }, tenantId: tenant.id, deletedAt: null },
+      select: setorRateSelect,
     });
     if (kategoris.length !== kategoriIds.length) {
       throw new BadRequestException(
@@ -139,6 +159,7 @@ export class SetorService {
       context: this.context,
       tenantId: tenant.id,
     });
+    await this.bustReports(tenant.id);
     return {
       id: created.id,
       kodeSetor: created.kodeSetor,
@@ -155,7 +176,7 @@ export class SetorService {
     };
   }
 
-  async mySetor(tenant: Tenant, userId: string, bulan?: string) {
+  async mySetor(tenant: TenantContext, userId: string, bulan?: string) {
     const nasabah = await this.resolveNasabah(tenant.id, userId);
     const where: Prisma.SetorSampahWhereInput = {
       tenantId: tenant.id,
@@ -169,9 +190,7 @@ export class SetorService {
     const rows = await this.prisma.setorSampah.findMany({
       where,
       orderBy: { tanggal: 'desc' },
-      include: {
-        detail: { include: { kategori: true } },
-      },
+      select: setorHistorySelect,
     });
     return rows.map((s) => ({
       id: s.id,
@@ -194,7 +213,7 @@ export class SetorService {
   }
 
   async adminList(
-    tenant: Tenant,
+    tenant: TenantContext,
     query: { status?: StatusSetor; bulan?: string },
   ) {
     const where: Prisma.SetorSampahWhereInput = {
@@ -209,7 +228,7 @@ export class SetorService {
     const rows = await this.prisma.setorSampah.findMany({
       where,
       orderBy: { tanggal: 'desc' },
-      include: { nasabah: true },
+      select: setorAdminListSelect,
     });
     return rows.map((s) => ({
       id: s.id,
@@ -222,13 +241,10 @@ export class SetorService {
     }));
   }
 
-  async receipt(tenant: Tenant, userId: string, role: UserRole, id: string) {
+  async receipt(tenant: TenantContext, userId: string, role: UserRole, id: string) {
     const setor = await this.prisma.setorSampah.findFirst({
       where: { id, tenantId: tenant.id, deletedAt: null },
-      include: {
-        nasabah: true,
-        detail: { include: { kategori: true } },
-      },
+      select: setorReceiptSelect,
     });
     if (!setor) {
       throw new NotFoundException('Deposit not found.');
@@ -263,7 +279,7 @@ export class SetorService {
   }
 
   async verify(
-    tenant: Tenant,
+    tenant: TenantContext,
     adminUserId: string,
     id: string,
     dto: VerifySetorSampahDto,
@@ -276,7 +292,7 @@ export class SetorService {
     const admin = await this.resolveAdmin(tenant.id, adminUserId);
     const setor = await this.prisma.setorSampah.findFirst({
       where: { id, tenantId: tenant.id, deletedAt: null },
-      include: { detail: true },
+      select: setorVerifySelect,
     });
     if (!setor) {
       throw new NotFoundException('Deposit not found.');
@@ -316,6 +332,7 @@ export class SetorService {
         context: this.context,
         tenantId: tenant.id,
       });
+      await this.bustReports(tenant.id);
       return {
         id: rejected.id,
         status: rejected.status,
@@ -337,6 +354,7 @@ export class SetorService {
     const kategoriIds = setor.detail.map((d) => d.idKategori);
     const kategoris = await this.prisma.kategoriSampah.findMany({
       where: { id: { in: kategoriIds }, tenantId: tenant.id },
+      select: setorRateSelect,
     });
     const poinByKategori = new Map(
       kategoris.map((k) => [k.id, { poin: Number(k.poinPerKg), harga: Number(k.hargaPerKg) }]),
@@ -399,6 +417,7 @@ export class SetorService {
       context: this.context,
       tenantId: tenant.id,
     });
+    await this.bustReports(tenant.id);
     return {
       id: result.id,
       status: result.status,

@@ -4,7 +4,10 @@ import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { HashingService } from '../../shared/hashing/hashing.service.js';
 import { JwtService } from '@nestjs/jwt';
 import { LoggerService } from '../../infra/logger/logger.service.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
 import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
+import { UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Tenant } from '../../../generated/prisma/client.js';
 
 describe('AuthService', () => {
@@ -15,7 +18,7 @@ describe('AuthService', () => {
     $transaction: Mock;
   };
   let mockHashingService: { hash: Mock; compare: Mock };
-  let mockJwtService: { signAsync: Mock };
+  let mockJwtService: { signAsync: Mock; verifyAsync: Mock };
 
   const mockTenant: Tenant = {
     id: 'tenant-id',
@@ -70,6 +73,21 @@ describe('AuthService', () => {
 
     mockJwtService = {
       signAsync: vi.fn().mockResolvedValue('jwt-token'),
+      verifyAsync: vi.fn(),
+    };
+
+    const mockConfigService = {
+      get: vi.fn((key: string) => {
+        const values: Record<string, unknown> = {
+          'auth.refreshExpiresIn': '7d',
+          'cookie.refreshTokenName': 'refresh_token',
+        };
+        return values[key];
+      }),
+      getOrThrow: vi.fn((key: string) => {
+        if (key === 'auth.refreshSecret') return 'refresh-secret';
+        throw new Error(`Unexpected key: ${key}`);
+      }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -82,6 +100,11 @@ describe('AuthService', () => {
           provide: LoggerService,
           useValue: { log: vi.fn(), debug: vi.fn() },
         },
+        {
+          provide: RedisService,
+          useValue: { get: vi.fn(), set: vi.fn(), delByPrefix: vi.fn() },
+        },
+        { provide: ConfigService, useValue: mockConfigService },
       ],
     }).compile();
 
@@ -137,5 +160,47 @@ describe('AuthService', () => {
     };
     expect(createArg.data.tenantId).toBe('tenant-id');
     expect(createArg.data.nasabah.create).not.toHaveProperty('tenantId');
+  });
+
+  describe('refresh', () => {
+    it('should issue a new access token for a valid refresh token', async () => {
+      mockJwtService.verifyAsync = vi
+        .fn()
+        .mockResolvedValue({ sub: 'user-id', tenantId: 'tenant-id', type: 'refresh' });
+      mockPrismaService.user.findFirst.mockResolvedValue({
+        id: 'user-id',
+        username: 'nasabah_test',
+        role: 'nasabah',
+      });
+
+      const result = await service.refresh('valid-refresh', 'tenant-id');
+
+      expect(result).toMatchObject({
+        id: 'user-id',
+        username: 'nasabah_test',
+        token: 'jwt-token',
+      });
+      expect(result).not.toHaveProperty('refreshToken');
+    });
+
+    it('should reject invalid refresh tokens', async () => {
+      mockJwtService.verifyAsync = vi.fn().mockRejectedValue(new Error('bad'));
+
+      await expect(service.refresh('bad-token', 'tenant-id')).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+
+    it('should reject refresh tokens from another tenant', async () => {
+      mockJwtService.verifyAsync = vi.fn().mockResolvedValue({
+        sub: 'user-id',
+        tenantId: 'other-tenant',
+        type: 'refresh',
+      });
+
+      await expect(
+        service.refresh('foreign-token', 'tenant-id'),
+      ).rejects.toThrow(UnauthorizedException);
+    });
   });
 });

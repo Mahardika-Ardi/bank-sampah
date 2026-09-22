@@ -8,11 +8,21 @@ import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { LoggerService } from '../../infra/logger/logger.service.js';
 import {
   StatusPenukaran,
-  Tenant,
   UserRole,
   Prisma,
 } from '../../../generated/prisma/client.js';
+import { TenantContext } from '../tenant/tenant-select.js';
 import { CreatePenukaranPoinDto } from './dto/penukaran.dto.js';
+import { RedisService } from '../../infra/redis/redis.service.js';
+import {
+  tukarAdminListSelect,
+  tukarHadiahSelect,
+  tukarHistorySelect,
+  tukarKodeSelect,
+  tukarOwnerSelect,
+  tukarReceiptSelect,
+  tukarStatusSelect,
+} from './penukaran-select.js';
 
 const round2 = (n: number): number => Math.round(n * 100) / 100;
 
@@ -30,11 +40,17 @@ export class PenukaranService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly logger: LoggerService,
+    private readonly redis: RedisService,
   ) {}
+
+  private async bustReports(tenantId: string): Promise<void> {
+    await this.redis.delByPrefix(RedisService.reportsPrefix(tenantId));
+  }
 
   private async resolveNasabah(tenantId: string, userId: string) {
     const nasabah = await this.prisma.nasabah.findFirst({
       where: { idUser: userId, tenantId, deletedAt: null },
+      select: tukarOwnerSelect,
     });
     if (!nasabah) {
       throw new ForbiddenException(
@@ -55,6 +71,7 @@ export class PenukaranService {
     const latest = await tx.penukaranPoin.findFirst({
       where: { tenantId, kodePenukaran: { startsWith: prefix } },
       orderBy: { kodePenukaran: 'desc' },
+      select: tukarKodeSelect,
     });
     const seq = latest
       ? Number.parseInt(latest.kodePenukaran.slice(prefix.length), 10) + 1
@@ -62,7 +79,7 @@ export class PenukaranService {
     return `${prefix}${String(seq).padStart(4, '0')}`;
   }
 
-  async redeem(tenant: Tenant, userId: string, dto: CreatePenukaranPoinDto) {
+  async redeem(tenant: TenantContext, userId: string, dto: CreatePenukaranPoinDto) {
     this.logger.debug(`redeem start hadiah=${dto.hadiahId}`, {
       context: this.context,
       tenantId: tenant.id,
@@ -71,6 +88,7 @@ export class PenukaranService {
     const nasabah = await this.resolveNasabah(tenant.id, userId);
     const hadiah = await this.prisma.hadiah.findFirst({
       where: { id: dto.hadiahId, tenantId: tenant.id, deletedAt: null },
+      select: tukarHadiahSelect,
     });
     if (!hadiah) {
       throw new NotFoundException('Reward not found.');
@@ -126,6 +144,7 @@ export class PenukaranService {
       context: this.context,
       tenantId: tenant.id,
     });
+    await this.bustReports(tenant.id);
     return {
       id: result.created.id,
       kodePenukaran: result.created.kodePenukaran,
@@ -138,12 +157,12 @@ export class PenukaranService {
     };
   }
 
-  async myPenukaran(tenant: Tenant, userId: string) {
+  async myPenukaran(tenant: TenantContext, userId: string) {
     const nasabah = await this.resolveNasabah(tenant.id, userId);
     const rows = await this.prisma.penukaranPoin.findMany({
       where: { tenantId: tenant.id, idNasabah: nasabah.id, deletedAt: null },
       orderBy: { tanggal: 'desc' },
-      include: { hadiah: true },
+      select: tukarHistorySelect,
     });
     return rows.map((p) => ({
       id: p.id,
@@ -159,7 +178,7 @@ export class PenukaranService {
     }));
   }
 
-  async adminList(tenant: Tenant, bulan?: string) {
+  async adminList(tenant: TenantContext, bulan?: string) {
     const where: {
       tenantId: string;
       deletedAt: null;
@@ -172,7 +191,7 @@ export class PenukaranService {
     const rows = await this.prisma.penukaranPoin.findMany({
       where,
       orderBy: { tanggal: 'desc' },
-      include: { nasabah: true, hadiah: true },
+      select: tukarAdminListSelect,
     });
     return rows.map((p) => ({
       id: p.id,
@@ -185,10 +204,10 @@ export class PenukaranService {
     }));
   }
 
-  async receipt(tenant: Tenant, userId: string, role: UserRole, id: string) {
+  async receipt(tenant: TenantContext, userId: string, role: UserRole, id: string) {
     const penukaran = await this.prisma.penukaranPoin.findFirst({
       where: { id, tenantId: tenant.id, deletedAt: null },
-      include: { nasabah: true, hadiah: true },
+      select: tukarReceiptSelect,
     });
     if (!penukaran) {
       throw new NotFoundException('Redemption transaction not found.');
@@ -217,7 +236,7 @@ export class PenukaranService {
   }
 
   async updateStatus(
-    tenant: Tenant,
+    tenant: TenantContext,
     id: string,
     status: StatusPenukaran,
   ) {
@@ -228,6 +247,7 @@ export class PenukaranService {
 
     const current = await this.prisma.penukaranPoin.findFirst({
       where: { id, tenantId: tenant.id, deletedAt: null },
+      select: tukarStatusSelect,
     });
     if (!current) {
       throw new NotFoundException('Redemption transaction not found.');
@@ -245,6 +265,7 @@ export class PenukaranService {
         context: this.context,
         tenantId: tenant.id,
       });
+      await this.bustReports(tenant.id);
       return { id: updated.id, status: updated.status };
     }
 
@@ -268,6 +289,7 @@ export class PenukaranService {
         `updateStatus voided id=${id} refunded=${refunded} poin`,
         { context: this.context, tenantId: tenant.id },
       );
+      await this.bustReports(tenant.id);
       return { id: updated.id, status: updated.status };
     }
 

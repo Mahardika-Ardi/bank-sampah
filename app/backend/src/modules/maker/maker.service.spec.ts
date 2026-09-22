@@ -18,7 +18,7 @@ describe('MakerService', () => {
     setorSampah: { count: Mock };
     hadiah: { count: Mock };
     user: { findFirst: Mock };
-    tenant: { create: Mock; findUnique: Mock };
+    tenant: { create: Mock; findUnique: Mock; findMany: Mock };
   };
   let mockHashingService: { hash: Mock; compare: Mock };
   let mockJwtService: { signAsync: Mock };
@@ -53,6 +53,7 @@ describe('MakerService', () => {
       tenant: {
         create: vi.fn().mockResolvedValue(mockTenant),
         findUnique: vi.fn().mockResolvedValue(mockTenant),
+        findMany: vi.fn().mockResolvedValue([]),
       },
     };
 
@@ -203,6 +204,60 @@ describe('MakerService', () => {
       await expect(service.checkKey('unknown@smk.sch.id')).rejects.toThrow(
         NotFoundException,
       );
+    });
+  });
+
+  describe('listBanks', () => {
+    it('should return only safe columns for active tenants', async () => {
+      mockPrismaService.tenant.findMany.mockResolvedValue([
+        {
+          id: 'tenant-id',
+          appName: 'Bank Sampah Digital Hub',
+          name: 'Bank Sampah Digital Hub',
+          appKey: 'app-key',
+        },
+      ]);
+
+      const result = await service.listBanks();
+
+      expect(result).toEqual([
+        {
+          id: 'tenant-id',
+          namaApp: 'Bank Sampah Digital Hub',
+          appKey: 'app-key',
+        },
+      ]);
+      expect(mockPrismaService.tenant.findMany).toHaveBeenCalledWith({
+        where: { deletedAt: null, isActive: true },
+        orderBy: { appName: 'asc' },
+        select: {
+          id: true,
+          appName: true,
+          name: true,
+          appKey: true,
+        },
+      });
+    });
+
+    it('should fall back to tenant name when appName is null', async () => {
+      mockPrismaService.tenant.findMany.mockResolvedValue([
+        {
+          id: 'tenant-id',
+          appName: null,
+          name: 'Bank Sampah Digital Hub',
+          appKey: 'app-key',
+        },
+      ]);
+
+      const result = await service.listBanks();
+
+      expect(result[0].namaApp).toBe('Bank Sampah Digital Hub');
+    });
+
+    it('should return an empty list when no active tenants exist', async () => {
+      mockPrismaService.tenant.findMany.mockResolvedValue([]);
+
+      await expect(service.listBanks()).resolves.toEqual([]);
     });
   });
 });
